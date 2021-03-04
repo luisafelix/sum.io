@@ -2,7 +2,9 @@ package client;
 
 import client.communication.CommsHandler;
 import client.engine.EngineHandler;
+import client.environment.EnvironmentHandler;
 import common.communication.ActionPack;
+import common.environment.Player;
 
 public class MainClient {
 	
@@ -22,15 +24,20 @@ public class MainClient {
 	 */
 	private CommsHandler commsHandler;
 	private EngineHandler engineHandler;
+	private EnvironmentHandler environmentHandler;
 	
 	public MainClient(String[] args)
 	{
 		commsHandler = new CommsHandler(args[0],Integer.parseInt(args[1]));	
+		environmentHandler = new EnvironmentHandler();
 		engineHandler = new EngineHandler(this);
 	}
 	
+	public Player getPlayer(){return environmentHandler.getPlayer();}
+	
 	public void sendActionPack(ActionPack aPack)
 	{
+		environmentHandler.doPlayerAction(aPack);
 		commsHandler.sendActionPack(aPack);
 	}
 

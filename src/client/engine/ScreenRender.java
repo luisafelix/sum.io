@@ -8,7 +8,7 @@ import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
-import common.communication.GameObject;
+import common.environment.GameObject;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

@@ -9,19 +9,22 @@ public class EngineHandler {
 	private Window window;
 	private MainClient callback;
 	
-	
 	public EngineHandler(MainClient callback)
 	{
 		this.callback = callback;
 		window = new Window("Application",600,600);;
 		screenRender = new ScreenRender();
 		window.addPanel(screenRender);
-		window.addKeyListener(new KeyboardListener(new UserAction(this)));
+		
+		//FIXME: ? adding a player here
+		window.addKeyListener(new KeyboardListener(new UserAction(this,callback.getPlayer())));
+		screenRender.addToRender(callback.getPlayer());
 	}
 	
 	public void sendActionPack(ActionPack aPack)
 	{
 		callback.sendActionPack(aPack);
+		screenRender.repaint();
 	}
 	
 }

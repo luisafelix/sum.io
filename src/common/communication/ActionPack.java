@@ -2,13 +2,17 @@ package common.communication;
 
 import java.util.LinkedList;
 
+import common.environment.Player;
+
 public class ActionPack implements java.io.Serializable
 {
 	private LinkedList<PlayerAction> playerActionList = null;
+	private Player player;
 	
-	public ActionPack()
+	public ActionPack(Player player)
 	{
 		playerActionList = new LinkedList<PlayerAction>();
+		this.player = player;
 	}
 	
 	public ActionPack(ActionPack aPack)
@@ -36,5 +40,12 @@ public class ActionPack implements java.io.Serializable
 		String res ="";
 		res+= playerActionList.toString();
 		return res;
+	}
+
+	public Player getPlayer() {return player;}
+	
+	public boolean empty() 
+	{	
+		return this.getPlayerActionList().isEmpty();
 	}
 }

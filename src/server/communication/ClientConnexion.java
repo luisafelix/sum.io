@@ -72,6 +72,7 @@ public class ClientConnexion extends Thread
 			
 		}
 	}
+	//TODO: Some updates to the client in a determinated time.
 	public void send(SyncPack sync)
 	{
 		try

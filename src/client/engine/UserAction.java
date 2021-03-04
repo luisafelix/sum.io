@@ -1,23 +1,47 @@
 package client.engine;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Timer;
+
 import client.communication.CommsHandler;
 import common.communication.ActionPack;
 import common.communication.PlayerAction;
+import common.environment.Player;
 
 public class UserAction
 {
 	private static int NUMBER_OF_KEYS = 126;
 	private boolean[] keyStatus;
 	
+	private Player himself;
 	private ActionPack aPack;
 	private EngineHandler callback;
+	
+	//FIXME: Find a nice timer speed, to send a ActionPack to the server. To not saturate
+	private Timer actionTimer;
+	private int timerSpeed = 30;
 	 
 	//FIXME: Players priority render.
-	public UserAction (EngineHandler engineHandler)
+	public UserAction (EngineHandler engineHandler, Player player)
 	{
 		keyStatus = new boolean[NUMBER_OF_KEYS];
 		this.callback = engineHandler;
-		aPack = new ActionPack();
+		this.himself = player;
+		aPack = new ActionPack(himself);
+		setupTimer();
+	}
+	
+	private void setupTimer()
+	{
+		actionTimer = new Timer(timerSpeed,
+							new ActionListener() {
+								public void actionPerformed(ActionEvent ae)
+								{
+									sendActionPack();
+								}
+							});
 	}
 	
 	public void onKeyPressed(int keyId)
@@ -27,6 +51,7 @@ public class UserAction
 			keyStatus[keyId]=true;
 			updateActionPack(keyId);
 			sendActionPack();
+			actionTimer.start();
 		}
 	}
 	
@@ -38,7 +63,13 @@ public class UserAction
 			updateActionPack(keyId);
 			sendActionPack();
 		}
+		
+		if(aPack.empty())
+		{
+			actionTimer.stop();
+		}
 	}
+	
 	
 	private ActionPack updateActionPack(int keyId) 
 	{
@@ -57,7 +88,7 @@ public class UserAction
 				aPack.updateAction(PlayerAction.MOVE_DOWN);
 			break;
 		}
-		return aPack;		
+		return aPack;
 	}
 	
 	private void sendActionPack()
