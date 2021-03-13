@@ -13,14 +13,12 @@ public class SyncPack implements java.io.Serializable
 	
 	public SyncPack()
 	{
-		
+
 	}
 	
-	public SyncPack(SyncPack sPack)
-	{
-		this.playerMap = sPack.getPlayerMap();
-		this.player = sPack.getPlayer();
-	}
+	public ArrayList<Player> getPlayerMap() {return playerMap;}
+	public Player getPlayer() {return player;}
+	public Platform getPlatform() {return platform;}
 	
 	public void addPlayerMap(ArrayList<Player> playerMap)
 	{
@@ -32,13 +30,8 @@ public class SyncPack implements java.io.Serializable
 		this.player = player;
 	}
 	
-	public ArrayList<Player> getPlayerMap() {return playerMap;}
-	public Player getPlayer() {return player;}
-
 	public void addPlatform(Platform platform) 
 	{
 		this.platform = platform;
 	}
-
-	public Platform getPlatform() {return platform;}
 }

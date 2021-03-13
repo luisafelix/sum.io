@@ -7,12 +7,8 @@ import common.communication.PlayerAction;
 
 public class ActionHandler 
 {
-	public ActionHandler()
-	{
-		
-	}
 
-	public void doPlayerAction(ActionPack aPack)
+	public static void doPlayerAction(ActionPack aPack)
 	{
 		Player p = aPack.getPlayer();
 		LinkedList<PlayerAction> playerActionList = aPack.getPlayerActionList();

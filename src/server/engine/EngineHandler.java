@@ -15,13 +15,11 @@ public class EngineHandler {
 		window = new Window("Server",600,600);;
 		screenRender = new ScreenRender();
 		window.addPanel(screenRender);
-		//FIXME: ? adding a player here
-		
 		screenRender.repaint();
 	}
 	
-	public ScreenRender getScreenRender() {
+	public ScreenRender getScreenRender() 
+	{
 		return screenRender;
 	}
-	
 }

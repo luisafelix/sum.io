@@ -30,6 +30,7 @@ public class Window extends JFrame{
 		mainPanel.revalidate();
 		mainPanel.repaint();	
 	}
+	
 	public void addPanel(JPanel screen)
 	{
 		this.addPanel(screen,0);

@@ -2,6 +2,7 @@ package client.engine;
 
 import client.MainClient;
 import common.communication.ActionPack;
+import common.environment.ActionHandler;
 
 public class EngineHandler {
 
@@ -27,10 +28,8 @@ public class EngineHandler {
 	
 	public void sendActionPack(ActionPack aPack)
 	{
-		callback.sendActionPack(aPack);
-		screenRender.repaint();
+		ActionHandler.doPlayerAction(aPack);
+		callback.getEngineHandler().getScreenRender().setOrigin(aPack.getPlayer().getX(),aPack.getPlayer().getY());
+		callback.getCommsHandler().sendActionPack(aPack);
 	}
-
-	
-	
 }

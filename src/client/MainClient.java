@@ -31,16 +31,9 @@ public class MainClient {
 		engineHandler = new EngineHandler(this);
 		environmentHandler = new EnvironmentHandler(this);
 		commsHandler = new CommsHandler(args[0],Integer.parseInt(args[1]),this);
-		
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
 	public CommsHandler getCommsHandler() {return commsHandler;}
 	public EngineHandler getEngineHandler() {return engineHandler;}
-	
-	//FIXME: Change sendActionPack for the specific class.
-	public void sendActionPack(ActionPack aPack)
-	{
-		commsHandler.sendActionPack(aPack);
-	}
 }

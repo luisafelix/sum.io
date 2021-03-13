@@ -82,8 +82,5 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		x+=dx;
 		y+=dy;
 	}
-
-	
-	
 }
 

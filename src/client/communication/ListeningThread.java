@@ -59,8 +59,6 @@ public class ListeningThread extends Thread{
 		}
 		network.close();
 	}
-		
-
 }
 	
 

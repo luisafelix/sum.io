@@ -64,12 +64,15 @@ public class ClientConnexion extends Thread
 	
 	public void close()
 	{
-		try{
-			if(socket !=null){
+		try
+		{
+			if(socket !=null)
+			{
 				socket.close();
 			}
 		}
-		catch(Exception e){
+		catch(Exception e)
+		{
 			
 		}
 	}
@@ -78,5 +81,4 @@ public class ClientConnexion extends Thread
 	{
 		callback.actionPackReceived(aPack);
 	}
-	
 }

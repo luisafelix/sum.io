@@ -19,8 +19,6 @@ import javax.imageio.ImageIO;
 public class ScreenRender extends JPanel{
 	
 	private PriorityQueue<GameObject> renderingQueue;
-	
-	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
 	public ScreenRender()
@@ -88,7 +86,6 @@ public class ScreenRender extends JPanel{
 		return res;
 	}
 	
-	//ADDLATER: Double Buffering.
 	@Override
 	public void paintComponent(Graphics g)
 	{

@@ -27,7 +27,6 @@ public class CommsHandler {
 	{
 		EnvironmentHandler evironmentHandler = callback.getEnvironmentHandler();
 		evironmentHandler.syncClient(syncPack);
-		
 	}
 	
 	public void sendActionPack(ActionPack aPack)

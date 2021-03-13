@@ -98,14 +98,10 @@ public class CommsHandler extends Thread
 	public void generateSyncPack()
 	{
 		SyncPack sPack = callback.getEnvironmentHandler().getSyncPack();
-		//System.out.println("PLAYER 1: " + callback.getEnvironmentHandler().getPlayerMap().get(0).getX());
-		//if(callback.getEnvironmentHandler().getPlayerMap().size()>1)
-		//	System.out.println("PLAYER 2: " + callback.getEnvironmentHandler().getPlayerMap().get(1).getX());
 		sendSyncPack(sPack);
 	}
 
 	public void actionPackReceived(ActionPack aPack) {
 		callback.actionPackReceived(aPack);
 	}
-
 }

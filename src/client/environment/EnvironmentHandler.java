@@ -18,7 +18,6 @@ import client.engine.EngineHandler;
 
 public class EnvironmentHandler 
 {
-	private ActionHandler actionHandler;
 	private ArrayList<Player> playerMap;
 	private Platform platform;
 	private Player himself;
@@ -26,10 +25,11 @@ public class EnvironmentHandler
 	
 	public EnvironmentHandler(MainClient callback)
 	{
-		actionHandler = new ActionHandler();
 		playerMap = new ArrayList<Player>();
 		this.callback = callback;
 	}
+	
+	public Player getPlayerClient() {return himself;}
 	
 	public void syncClient(SyncPack sPack)
 	{
@@ -42,7 +42,7 @@ public class EnvironmentHandler
 			himself = sPack.getPlayer();
 			callback.getEngineHandler().getInputHandler().setPlayer(himself);
 		}
-		callback.getEngineHandler().getScreenRender().setOrigin(sPack.getPlayer().getX(),sPack.getPlayer().getY());
+		
 		//Platform setup in client side
 		if(platform == null)
 		{
@@ -52,14 +52,12 @@ public class EnvironmentHandler
 		
 		if(engineHandler != null)
 		{
-			//FIXME: We do not need to clear the render. Just update the position
 			for(Player p : playerMap)
 			{
 				engineHandler.getScreenRender().addToRender((GameObject)p);
 			}
-			engineHandler.getScreenRender().repaint();
 		}
+		callback.getEngineHandler().getScreenRender().setOrigin(himself.getX(),himself.getY());
+		engineHandler.getScreenRender().repaint();
 	}
-	public Player getPlayerClient() {return himself;}
-	
 }

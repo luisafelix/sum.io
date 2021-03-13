@@ -46,5 +46,4 @@ public class MainServer
 	public void actionPackReceived(ActionPack aPack) {
 		environmentHandler.doPlayerAction(aPack);
 	}
-	
 }

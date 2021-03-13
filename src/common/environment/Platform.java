@@ -6,6 +6,4 @@ public class Platform extends GameObject{
 	{
 		super(name, x, y, width, height, renderingPriority);
 	}
-	
-
 }

@@ -13,31 +13,39 @@ public class SendHandler{
 	
 	public SendHandler(Socket socket){
 		this.socket = socket;
-		try{
+		try
+		{
 			toClient = new ObjectOutputStream(socket.getOutputStream());
-		}catch(Exception e){
+		}
+		catch(Exception e)
+		{
 			//e.printStackTrace();
 		}
 	}
 	
 	//TODO: Some updates to the client in a determinated time.
 	public void send(SyncPack sPack){
-		try{
+		try
+		{
 			toClient.writeObject(sPack);
 			toClient.reset(); // do not forget the reset, lose data from array list. Why ???
-		}catch(Exception e){
+		}
+		catch(Exception e){
 		}
 
 	}
 	
 	public void close(){
-		try{
-			if(socket !=null){
+		try
+		{
+			if(socket !=null)
+			{
 				socket.close();
 			}
-		}catch(Exception e){
+		}
+		catch(Exception e)
+		{
 			
 		}
 	}
-	
 }

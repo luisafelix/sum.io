@@ -116,7 +116,7 @@ public class ScreenRender extends JPanel{
 		return res;
 	}
 	
-	//ADDLATER: Double Buffering.
+	//TODO: Double Buffering.
 	@Override
 	public void paintComponent(Graphics g)
 	{

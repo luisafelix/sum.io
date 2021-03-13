@@ -21,6 +21,7 @@ public class ActionPack implements java.io.Serializable
 		this.player = aPack.getPlayer();
 	}
 	
+	public Player getPlayer() {return player;}
 	public LinkedList<PlayerAction> getPlayerActionList(){return playerActionList;}
 	
 	public void setPlayer(Player player) {this.player = player;}
@@ -38,17 +39,14 @@ public class ActionPack implements java.io.Serializable
 		}
 	}
 	
-	
 	public String toString()
 	{
 		String res ="";
 		res+= playerActionList.toString();
 		return res;
 	}
-
-	public Player getPlayer() {return player;}
 	
-	public boolean empty() 
+	public boolean isEmpty() 
 	{	
 		return this.playerActionList.isEmpty();
 	}

@@ -12,7 +12,7 @@ import common.environment.Player;
 
 public class InputHandler
 {
-	private static int NUMBER_OF_KEYS = 300;
+	private static int NUMBER_OF_KEYS = 500;
 	
 	private boolean[] keyStatus;
 	
@@ -70,12 +70,11 @@ public class InputHandler
 			sendActionPack();
 		}
 		
-		if(aPack.empty())
+		if(aPack.isEmpty())
 		{
 			actionTimer.stop();
 		}
 	}
-	
 	
 	private ActionPack updateActionPack(int keyId) 
 	{
