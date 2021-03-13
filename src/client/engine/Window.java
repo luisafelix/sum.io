@@ -19,8 +19,6 @@ public class Window extends JFrame{
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		mainPanel = new JPanel(new BorderLayout());
-		//FIXME: Add keylistener.
-		//this.addKeyListener(new KeyboardListener());
 		
 		add(mainPanel);
 		setVisible(true);

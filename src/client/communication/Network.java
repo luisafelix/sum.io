@@ -5,7 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import client.engine.UserAction;
+import client.engine.InputHandler;
 import common.communication.ActionPack;
 
 public class Network {
@@ -23,12 +23,12 @@ public class Network {
 	
 	public void connect(String ip, int port)
 	{
+		
 		 try 
 		 {
 			 socket = new Socket(ip,port);
-			 objectOutput = new ObjectOutputStream(socket.getOutputStream());
 			 listenerThread = new ListeningThread(socket, callback, this);
-			 
+			 objectOutput = new ObjectOutputStream(socket.getOutputStream());
 		 }
 		 catch (UnknownHostException e) 
 		 {
@@ -39,14 +39,14 @@ public class Network {
 		 {
 			 e.printStackTrace();
 	         System.exit(1);
-		 }  
+		 }
 	}
 	
 	public void sendActionPack(ActionPack aPack)
 	{
 		try 
 		{
-			//FIXME: Problem with the array that doesn't actualize, fixed by adding a new ActionPack that is a clone from the before.
+			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new ActionPack that is a clone from the before.
 			ActionPack actionPack = new ActionPack(aPack);
 			objectOutput.writeObject(actionPack);
 		}

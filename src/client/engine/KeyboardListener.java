@@ -5,10 +5,10 @@ import java.awt.event.KeyEvent;
 
 public class KeyboardListener implements KeyListener
 {
-	private UserAction userAction;
-	public KeyboardListener(UserAction player)
+	private InputHandler userAction;
+	public KeyboardListener(InputHandler userAction)
 	{
-		this.userAction = player;
+		this.userAction = userAction;
 	}
 	@Override
 	public void keyPressed(KeyEvent e)

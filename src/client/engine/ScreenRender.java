@@ -18,22 +18,36 @@ import javax.imageio.ImageIO;
 
 public class ScreenRender extends JPanel{
 	
-	private int screenWidth;
-	private int screenHeight;
+	private int windowWidth;
+	private int windowHeight;
+	
+	private int originX;
+	private int originY;
 	
 	private PriorityQueue<GameObject> renderingQueue;
-	
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	public ScreenRender()
+	private EngineHandler callback;
+	
+	public ScreenRender(EngineHandler callback)
 	{
+		originX = 0;
+		originY = 0;
+		this.callback = callback;
 		renderingQueue = new PriorityQueue<GameObject>();
 		imageMap = new Hashtable<String,BufferedImage>();
+		
 		loadImages();
 	}
 	
-	public void loadImages()
+	public void setOrigin(int x,int y) 
+	{
+		this.originX= x; 
+		this.originY = y;
+	}
+	
+	private void loadImages()
 	{
 		//Find all the images names in the res folder
 		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res");
@@ -55,10 +69,16 @@ public class ScreenRender extends JPanel{
 	
 	public void addToRender(GameObject go)
 	{
-		if(!renderingQueue.contains(go))
-		{
-			renderingQueue.add(go);
+		for(GameObject g : renderingQueue) 
+		{	
+		if(g.equals(go)) 
+			{
+				g.setX(go.getX());
+				g.setY(go.getY());
+				return;
+			}
 		}
+		renderingQueue.add(go);
 	}
 	
 	public void addToRender(ArrayList<GameObject> goList)
@@ -67,6 +87,11 @@ public class ScreenRender extends JPanel{
 		{
 			addToRender(go);
 		}
+	}
+	
+	public void clearRender()
+	{
+		renderingQueue.clear();
 	}
 	
 	public boolean removeToRender(GameObject go)
@@ -96,18 +121,21 @@ public class ScreenRender extends JPanel{
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		
+		windowHeight = this.getHeight();
+		windowWidth = this.getWidth();
+		
 		for(GameObject go:renderingQueue)
 		{
 			BufferedImage currentImage = imageMap.get(go.getName());
+			if(currentImage == null)
+			{
+				currentImage = imageMap.get("noTexture");
+			}
+			int tempPosX = go.getX() - originX;
+			int tempPosY = go.getY() - originY;
 			
-			if(currentImage != null)
-			{
-				g.drawImage(imageMap.get(go.getName()),go.getX(),go.getY(),go.getWidth(),go.getHeight(),null);
-			}
-			else
-			{
-				g.drawImage(imageMap.get("noTexture"),go.getX(),go.getY(),go.getWidth(),go.getHeight(),null);
-			}
+			g.drawImage(currentImage,windowWidth/2 + tempPosX-go.getWidth()/2,windowHeight/2 + tempPosY-go.getHeight()/2,go.getWidth(),go.getHeight(),null);
 		}
 	}
 }

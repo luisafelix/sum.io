@@ -14,12 +14,15 @@ public class ClientConnexion extends Thread
 	private Socket socket;
 	private CommsHandler callback;
 	private ObjectInputStream fromClient;
+	private String clientIP;
+	
 	private ObjectOutputStream toClient;
 
-	public ClientConnexion(Socket socket, CommsHandler callback)
+	public ClientConnexion(Socket socket, String clientIP, CommsHandler callback)
 	{
 		this.socket = socket;
 		this.callback = callback;
+		this.clientIP = clientIP;
 		start();
 	}
 	
@@ -28,7 +31,7 @@ public class ClientConnexion extends Thread
 		try
 		{
 			fromClient = new ObjectInputStream(socket.getInputStream());
-			toClient = new ObjectOutputStream(socket.getOutputStream());
+			//Prepare a new thread to send the packages for each client.
 			boolean loop = true;
 			ActionPack actionPack;
 			while(loop)
@@ -58,36 +61,22 @@ public class ClientConnexion extends Thread
 		close();
 		callback.remove(this);
 	}
+	
 	public void close()
 	{
-		try
-		{
-			if(socket !=null)
-			{
+		try{
+			if(socket !=null){
 				socket.close();
 			}
 		}
-		catch(Exception e)
-		{
+		catch(Exception e){
 			
 		}
 	}
-	//TODO: Some updates to the client in a determinated time.
-	public void send(SyncPack sync)
-	{
-		try
-		{
-			toClient.writeObject(sync);
-		}
-		catch(Exception e)
-		{
-			close();
-		}
-	}
 	
-	private void actionPackReceived(ActionPack actionPack)
+	private void actionPackReceived(ActionPack aPack)
 	{
-		System.out.println(actionPack);
+		callback.actionPackReceived(aPack);
 	}
 	
 }

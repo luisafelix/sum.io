@@ -12,8 +12,8 @@ public class MainClient {
 	{
 		if(args.length != 2)
 		{
-			System.out.println("Please enter the IP to the server followed by the port (Only numbers)");
-			System.out.println("For example: java exemple 192.122.1.1 1234");
+			System.out.println("Please enter the IP to the server (yours) followed by the port (if you didn't change it is 8000)");
+			System.out.println("For example: java localhost 8000");
 			return;
 		}
 		new MainClient(args);
@@ -28,17 +28,19 @@ public class MainClient {
 	
 	public MainClient(String[] args)
 	{
-		commsHandler = new CommsHandler(args[0],Integer.parseInt(args[1]));	
-		environmentHandler = new EnvironmentHandler();
 		engineHandler = new EngineHandler(this);
+		environmentHandler = new EnvironmentHandler(this);
+		commsHandler = new CommsHandler(args[0],Integer.parseInt(args[1]),this);
+		
 	}
 	
-	public Player getPlayer(){return environmentHandler.getPlayer();}
+	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
+	public CommsHandler getCommsHandler() {return commsHandler;}
+	public EngineHandler getEngineHandler() {return engineHandler;}
 	
+	//FIXME: Change sendActionPack for the specific class.
 	public void sendActionPack(ActionPack aPack)
 	{
-		environmentHandler.doPlayerAction(aPack);
 		commsHandler.sendActionPack(aPack);
 	}
-
 }

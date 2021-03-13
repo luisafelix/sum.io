@@ -1,14 +1,14 @@
 package client.communication;
 
-import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import common.communication.SyncPack;
+import common.environment.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
 
 public class ListeningThread extends Thread{
 	
@@ -40,7 +40,8 @@ public class ListeningThread extends Thread{
 						loop = false;
 					}else if (objectReceived instanceof SyncPack)
 					{
-						callback.receive((SyncPack)objectReceived);
+						SyncPack sPack = (SyncPack)objectReceived;
+						callback.receive(sPack);
 					}
 				}
 				catch(ClassNotFoundException e)

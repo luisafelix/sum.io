@@ -17,17 +17,21 @@ public class ActionPack implements java.io.Serializable
 	
 	public ActionPack(ActionPack aPack)
 	{
-		playerActionList = (LinkedList<PlayerAction>) aPack.getPlayerActionList().clone();
+		this.playerActionList = (LinkedList<PlayerAction>) aPack.getPlayerActionList().clone();
+		this.player = aPack.getPlayer();
 	}
 	
 	public LinkedList<PlayerAction> getPlayerActionList(){return playerActionList;}
 	
+	public void setPlayer(Player player) {this.player = player;}
+	
+	//If we add the same PlayerAction two times we remove him from the keyboard
 	public void updateAction(PlayerAction action)
 	{
 		if(!playerActionList.contains(action))
 		{
 			playerActionList.add(action);
-		}	
+		}
 		else
 		{
 			playerActionList.remove(action);
@@ -46,6 +50,6 @@ public class ActionPack implements java.io.Serializable
 	
 	public boolean empty() 
 	{	
-		return this.getPlayerActionList().isEmpty();
+		return this.playerActionList.isEmpty();
 	}
 }
