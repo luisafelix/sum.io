@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Player extends GameObject implements CircleColider
 {
-	private final int MAX_SPEED = 10;
+	private final int MAX_SPEED = 15;
 	
 	private String playerIP;
 	private int radiusColider;
@@ -12,8 +12,8 @@ public class Player extends GameObject implements CircleColider
 	
 	private double speedX = 0 ;
 	private double speedY = 0;
-	private double accX = 2;
-	private double accY = 2;
+	private double accX = 1;
+	private double accY = 1;
 	
 	public Player(String name, int x, int y, int width, int height, String playerIP,int priorityRender) 
 	{
@@ -56,20 +56,6 @@ public class Player extends GameObject implements CircleColider
 	{
 		//FIXME: Hard coded
 		return "P:"+ this.getName();
-	}
-	
-	public boolean colidedTo(CircleColider obj2)
-	{
-		boolean haveColision = false;
-		
-		double xDist = Math.pow(this.x - obj2.getX(), 2);
-		double yDist = Math.pow(this.y - obj2.getY(), 2);
-		
-		if(xDist + yDist < Math.pow(this.radiusColider + obj2.getRadiusColider(),2))
-		{
-			haveColision = true;
-		}
-		return haveColision;
 	}
 	
 	public void onColision(CircleColider obj2)

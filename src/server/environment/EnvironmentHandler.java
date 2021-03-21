@@ -32,7 +32,7 @@ public class EnvironmentHandler
 	private Timer updateTimer;
 	private int updateRate = 20;
 	
-	private double friction = 0.04;
+	private double friction = 0.02;
 	
 	//FIXME: temp
 	private static int clientNumber = 1;
@@ -112,10 +112,7 @@ public class EnvironmentHandler
 			for(int j = 0; j<i ;j++)
 			{
 				Player p2 = playerMap.get(j);
-				if(p1.colidedTo((CircleColider)p2))
-				{
-					p1.onColision((CircleColider)p2);
-				}
+				p1.didCollidTo((CircleColider)p2);
 			}
 		}
 	}
