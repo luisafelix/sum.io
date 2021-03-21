@@ -1,11 +1,8 @@
 package server.engine;
 
-//Question: Is it good pratice to declare with '*' instead of the name of each class ?
-import java.util.PriorityQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
-
 import javax.swing.JPanel;
 
 import common.environment.GameObject;
@@ -18,12 +15,12 @@ import javax.imageio.ImageIO;
 
 public class ScreenRender extends JPanel{
 	
-	private PriorityQueue<GameObject> renderingQueue;
+	private ConcurrentLinkedQueue<GameObject> renderingQueue;
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
 	public ScreenRender()
 	{
-		renderingQueue = new PriorityQueue<GameObject>();
+		renderingQueue = new ConcurrentLinkedQueue<GameObject>();
 		imageMap = new Hashtable<String,BufferedImage>();
 		loadImages();
 	}
@@ -60,7 +57,7 @@ public class ScreenRender extends JPanel{
 	{
 		for(GameObject go : goList )
 		{
-			addToRender(go);
+			this.addToRender(go);
 		}
 	}
 	
@@ -97,7 +94,7 @@ public class ScreenRender extends JPanel{
 			{
 				currentImage = imageMap.get("noTexture");
 			}
-			g.drawImage(currentImage,this.getWidth()/2 + go.getX()-go.getWidth()/2,this.getHeight()/2 + go.getY()-go.getHeight()/2,go.getWidth(),go.getHeight(),null);
+			g.drawImage(currentImage,this.getWidth()/2 + (int)go.getX()-go.getWidth()/2,this.getHeight()/2 + (int)go.getY()-go.getHeight()/2,go.getWidth(),go.getHeight(),null);
 		}
 	}
 }

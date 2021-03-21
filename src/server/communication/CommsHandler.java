@@ -72,7 +72,8 @@ public class CommsHandler extends Thread
 				connexions.add(new ClientConnexion(clientSocket,clientIP,this));
 				sendHandler.add(new SendHandler(clientSocket));
 				
-				callback.connectPlayer(clientIP);
+				onPlayerConect(clientIP);
+
 			}
 		}
 		catch(IOException e)
@@ -101,7 +102,15 @@ public class CommsHandler extends Thread
 		sendSyncPack(sPack);
 	}
 
-	public void actionPackReceived(ActionPack aPack) {
-		callback.actionPackReceived(aPack);
+	public void actionPackReceived(ActionPack aPack)
+	{
+		callback.getEnvironmentHandler().doPlayerAction(aPack);
+	}
+	
+	private void onPlayerConect(String clientIP)
+	{
+		callback.getEnvironmentHandler().connectPlayer(clientIP);
+		startUpdateTimer();
+		callback.getEngineHandler().getScreenRender().repaint();
 	}
 }

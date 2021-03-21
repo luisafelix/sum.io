@@ -3,6 +3,7 @@ package client.engine;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.event.KeyListener;
+import java.awt.image.renderable.RenderableImage;
 
 import javax.swing.JPanel;
 
@@ -22,6 +23,7 @@ public class Window extends JFrame{
 		
 		add(mainPanel);
 		setVisible(true);
+		createBufferStrategy(2);
 	}
 
 	public void addPanel(JPanel panel, int position)

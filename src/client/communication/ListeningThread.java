@@ -2,11 +2,7 @@ package client.communication;
 
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-
 import common.communication.SyncPack;
-import common.environment.Player;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 

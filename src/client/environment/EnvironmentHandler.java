@@ -1,16 +1,8 @@
 package client.environment;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-import javax.swing.Timer;
-
 import client.MainClient;
-import common.communication.ActionPack;
 import common.communication.SyncPack;
-import common.environment.ActionHandler;
 import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
@@ -57,7 +49,6 @@ public class EnvironmentHandler
 				engineHandler.getScreenRender().addToRender((GameObject)p);
 			}
 		}
-		callback.getEngineHandler().getScreenRender().setOrigin(himself.getX(),himself.getY());
-		engineHandler.getScreenRender().repaint();
+		callback.getEngineHandler().getScreenRender().setOrigin((int)himself.getX(),(int)himself.getY());
 	}
 }

@@ -20,7 +20,7 @@ public class InputHandler
 	private ActionPack aPack;
 	private EngineHandler callback;
 	
-	//FIXME: Find a nice timer speed, to send a ActionPack to the server. To not saturate
+	//FIXME: Find a nice updateRate, to send a ActionPack to the server. To not saturate
 	private Timer actionTimer;
 	private int inputSpeedRate = 30;
 	 

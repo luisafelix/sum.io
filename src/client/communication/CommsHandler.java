@@ -1,7 +1,6 @@
 package client.communication;
 
 import client.*;
-import client.engine.*;
 import client.environment.EnvironmentHandler;
 import common.communication.SyncPack;
 import common.communication.ActionPack;

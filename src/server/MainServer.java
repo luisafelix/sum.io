@@ -29,21 +29,5 @@ public class MainServer
 	
 	public EngineHandler getEngineHandler() {return engineHandler;}
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
-	
-	public void connectPlayer(String clientIP)
-	{
-		environmentHandler.connectPlayer(clientIP);
-		commsHandler.startUpdateTimer();
-		
-		engineHandler.getScreenRender().repaint();
-	}
-	//TODO: do a system that stops the update timer.
-	public void sendSyncPack(SyncPack sPack)
-	{
-		commsHandler.sendSyncPack(sPack);
-	}
-
-	public void actionPackReceived(ActionPack aPack) {
-		environmentHandler.doPlayerAction(aPack);
-	}
+	public CommsHandler getCommsHandler() {return commsHandler;}
 }

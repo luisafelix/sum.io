@@ -17,16 +17,16 @@ public class ActionHandler
 			switch(currentP)
 			{
 				case MOVE_LEFT:
-					p.translate(-p.getSpeedX(), 0);
+					p.accelerateX(-1);
 					break;
 				case MOVE_UP:
-					p.translate(0,-p.getSpeedY());
+					p.accelerateY(-1);
 					break;
 				case MOVE_RIGHT:
-					p.translate(+p.getSpeedX(),0);
+					p.accelerateX(1);
 					break;
 				case MOVE_DOWN:
-					p.translate(0,+p.getSpeedY());
+					p.accelerateY(1);
 					break;
 			}
 		}
