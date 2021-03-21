@@ -1,5 +1,6 @@
 package common.environment;
 
+import java.io.IOException;
 
 public class Player extends GameObject implements CircleColider
 {
@@ -74,16 +75,8 @@ public class Player extends GameObject implements CircleColider
 	public void onColision(CircleColider obj2)
 	{
 		//Remove the control from the player to handle the colision
-		double accX1 = this.getAccX();
-		double accY1 = this.getAccY();
-		
-		double accX2 = ((Player)obj2).getAccX();
-		double accY2 = ((Player)obj2).getAccY();
-		
-		this.setAccX(0);
-		this.setAccY(0);
-		((Player)obj2).setAccX(0);
-		((Player)obj2).setAccY(0);
+		new RemoveControls(this,2000);
+		new RemoveControls(((Player)obj2),2000);
 		
 		double tempX1 = this.getX();
 		double tempY1 = this.getY();
@@ -133,16 +126,9 @@ public class Player extends GameObject implements CircleColider
 				2 * ((Player)obj2).getRadiusColider() * dpNorm1)/(radiusColider + ((Player)obj2).getRadiusColider());
 		
 		setSpeedX( tX*dpTan1 + nX*m1);
-		setSpeedY( tY*dpTan2 + nY*m1);
+		setSpeedY( tY*dpTan1 + nY*m1);
 		((Player)obj2).setSpeedX( tX*dpTan2 + nX*m2);
 		((Player)obj2).setSpeedY( tY*dpTan2 + nY*m2);
-		
-		
-		this.setAccX(accX1);
-		this.setAccY(accY1);
-		((Player)obj2).setAccX(accX2);
-		((Player)obj2).setAccY(accY2);
-		
 		
 	}
 	
@@ -174,4 +160,5 @@ public class Player extends GameObject implements CircleColider
 	{
 		return (speedX != 0 || speedY !=0);
 	}
+
 }
