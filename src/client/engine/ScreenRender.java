@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import common.environment.GameObject;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
@@ -127,16 +128,20 @@ public class ScreenRender{
 		return res;
 	}
 	
+	
 	public void draw()
 	{
 		//TODO: Get a better way to render
 		double t1 = System.currentTimeMillis();
+		
+		double nanot1 = System.nanoTime();
 		
 		do 
 		{
 			do 
 			{
 				Graphics g = bufferStrategy.getDrawGraphics();
+				
 				windowHeight = callback.getWindow().getHeight();
 				windowWidth = callback.getWindow().getWidth();
 				g.clearRect(0, 0, windowWidth, windowHeight);
@@ -148,10 +153,28 @@ public class ScreenRender{
 					{
 						currentImage = imageMap.get("noTexture");
 					}
+					
 					int tempPosX = (int)go.getX() - originX;
 					int tempPosY = (int)go.getY() - originY;
 					
-					g.drawImage(currentImage,windowWidth/2 + tempPosX - go.getWidth()/2,windowHeight/2 + tempPosY-go.getHeight()/2,go.getWidth(),go.getHeight(),null);
+					int iX = windowWidth/2 + tempPosX - go.getWidth()/2;
+					int iY = windowHeight/2 + tempPosY - go.getHeight()/2;
+					
+					double scaleX = go.getWidth()/(double)currentImage.getWidth();
+					double scaleY = go.getHeight()/(double)currentImage.getHeight();
+					
+					imageInScreen(
+									g,
+									currentImage,
+									iX,
+									iY,
+									go.getWidth(),
+									go.getHeight(),
+									scaleX,
+									scaleY,
+									windowWidth,
+									windowHeight
+									);
 				}
 				g.dispose();
 				
@@ -163,11 +186,87 @@ public class ScreenRender{
 		}
 		while(bufferStrategy.contentsLost());
 		
+		double nanot2 = System.nanoTime();
+		
 		realFps = (int) (1000/(t1-oldT));
 		//System.out.println("FPS: "+ realFps);
+		
+		//System.out.println("Temp de rend: "+ (nanot2-nanot1));
 		oldT=t1;
 		
 	}
 	
+	//FIXME: The implementation of rendering just what is in the screen is worst than just render everything ..., good job!
+	private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
+	{
+		int xCut = 0;
+		int yCut = 0;
+		int wCut = (goWidth);
+		int hCut = (goHeight);
+		
+		if(iX + goWidth < 0)
+		{
+			return;
+		}
+		
+		if(iX > wWidth)
+		{
+			return;
+		}
+		
+		if(iY + goHeight < 0)
+		{
+			return;
+		}
+		
+		if(iY > wHeight)
+		{
+			return;
+		}
+		
+		if (iX <= 0)
+		{
+			xCut = -(iX);
+			wCut = wCut - xCut;
+		}
+		
+		if (iX + goWidth > wWidth)
+		{
+			wCut = wCut - ( iX + goWidth - wWidth);
+		}
+		
+		if (iY <= 0)
+		{
+			yCut = -(iY);
+			hCut = hCut - yCut;
+		}
+		
+		if (iY + goHeight > wHeight)
+		{
+			hCut = hCut - ( iY + goHeight - wHeight);
+		}
+		
+		if(wCut > 0 && hCut > 0)
+		{
+			currentImage = currentImage.getSubimage(
+					(int)(xCut/xScale),
+					(int)(yCut/yScale),
+					(int)((wCut)/xScale),
+					(int)((hCut)/yScale)
+					);
+		}
+		else
+		{
+			return;
+		}
+		
+		g.drawImage(
+					currentImage,
+					iX + xCut,
+					iY + yCut,
+					(int)(currentImage.getWidth()*xScale),
+					(int)(currentImage.getHeight()*yScale),
+					null);
+	}
 }
 

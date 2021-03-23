@@ -15,6 +15,9 @@ public class Player extends GameObject implements CircleColider
 	private double accX = 1;
 	private double accY = 1;
 	
+	private int stunTime = 2000;
+	private boolean flagColision = false;
+	
 	public Player(String name, int x, int y, int width, int height, String playerIP,int priorityRender) 
 	{
 		super(name, x, y, width, height, priorityRender);
@@ -33,6 +36,8 @@ public class Player extends GameObject implements CircleColider
 	public void setAccY(double accY) { this.accY = accY;}
 	
 	public int getRadiusColider() {return radiusColider;}
+	public boolean getFlagColision() {return flagColision;}
+	public void setFlagColision(boolean flagColision) {this.flagColision = flagColision;}
 	
 	public boolean equals(Object o)
 	{
@@ -61,8 +66,17 @@ public class Player extends GameObject implements CircleColider
 	public void onColision(CircleColider obj2)
 	{
 		//Remove the control from the player to handle the colision
-		new RemoveControls(this,2000);
-		new RemoveControls(((Player)obj2),2000);
+		if(!getFlagColision())
+		{
+			new RemoveControls(this,stunTime);
+			setFlagColision(true);
+		}
+		if(!((Player)obj2).getFlagColision())
+		{
+			new RemoveControls(((Player)obj2),stunTime);
+			((Player)obj2).setFlagColision(true);
+		}
+		
 		
 		double tempX1 = this.getX();
 		double tempY1 = this.getY();
@@ -146,5 +160,4 @@ public class Player extends GameObject implements CircleColider
 	{
 		return (speedX != 0 || speedY !=0);
 	}
-
 }

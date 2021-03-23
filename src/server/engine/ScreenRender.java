@@ -94,7 +94,13 @@ public class ScreenRender extends JPanel{
 			{
 				currentImage = imageMap.get("noTexture");
 			}
-			g.drawImage(currentImage,this.getWidth()/2 + (int)go.getX()-go.getWidth()/2,this.getHeight()/2 + (int)go.getY()-go.getHeight()/2,go.getWidth(),go.getHeight(),null);
+			g.drawImage(currentImage,
+					this.getWidth()/2 + (int)go.getX()-go.getWidth()/2,
+					this.getHeight()/2 + (int)go.getY()-go.getHeight()/2,
+					go.getWidth(),
+					go.getHeight(),
+					null);
+			
 		}
 	}
 }

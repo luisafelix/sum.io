@@ -53,7 +53,14 @@ public class EnvironmentHandler
 	public void connectPlayer(String clientIP)
 	{
 		//TODO: A system that stores the ips already connected, store the position and the caracteristics of the player
-		Player currentPlayer = new Player("ball"+clientNumber,0,0,50,50,clientIP,PRIORITYRENDER_PLAYER);
+		Player currentPlayer = new Player(
+										"ball"+clientNumber,
+										(int)( 600* Math.cos(Math.PI/6 *(clientNumber-1))),
+										(int)( 600* Math.sin(Math.PI/6*(clientNumber-1))),
+										50,
+										50,
+										clientIP,PRIORITYRENDER_PLAYER
+										);
 		clientNumber++;
 		callback.getEngineHandler().getScreenRender().addToRender(currentPlayer);
 		playerMap.add(currentPlayer);
@@ -64,7 +71,7 @@ public class EnvironmentHandler
 	
 	private void setupPlatform()
 	{
-		Platform platform = new Platform("platform1",0,0,1200,1200,PRIORITYRENDER_BACKGROUND);
+		Platform platform = new Platform("platform2",0,0,1600,1600,PRIORITYRENDER_BACKGROUND);
 		callback.getEngineHandler().getScreenRender().addToRender(platform);
 		this.platform = platform;
 		syncPack.addPlatform(platform);
