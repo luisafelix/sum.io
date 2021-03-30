@@ -9,6 +9,10 @@ import javax.swing.JPanel;
 
 public class Window extends JFrame{
 	
+	//FIXME: Hard coded
+	public final static int BORDER_WIDTH = 7;
+	public final static int BORDER_HEIGHT = 30;
+	
 	private JPanel mainPanel;
 	
 	public Window(String title, int w, int h)

@@ -1,0 +1,3 @@
+INDEX VERSION 1.131+A:\MyDocuments\Desktop\INSA\WorkSpace\Informatique\Project\project\.metadata\.plugins\org.eclipse.jdt.core
+2394582992.index
+1462805630.index

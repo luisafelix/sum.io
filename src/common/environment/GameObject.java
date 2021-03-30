@@ -12,6 +12,8 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	private int id;
 	private static int idCount = 0;
 	
+	private boolean isAbsoluteCoordinates = false;
+	
 	public GameObject (String name, int x,int y, int width, int height)
 	{
 		this.name = name;
@@ -30,11 +32,14 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		this.renderingPriority = renderingPriority;
 	}
 	
+	
 	/*
 	 * GETTERS AND SETTERS
 	*/
 	public int getRenderingPriority(){return renderingPriority;}
 	public void setRenderingPriority(int renderingPriority){this.renderingPriority=renderingPriority;}
+	public void setAbsolute(boolean absolute) {isAbsoluteCoordinates = absolute;}
+	public boolean isAbsolutePath() {return isAbsoluteCoordinates;}
 	
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
@@ -66,14 +71,20 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		GameObject go = (GameObject)o;
 		
 		if(go.getId() != id){return false;}
-		return true;
+		
+		if(go.getX()==getX() && go.getY() == getY() && go.getWidth() == getWidth() && go.getHeight() == getHeight() && go.getName().equals(getName()))
+		{
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
 	public String toString()
 	{
 			String res = "";
-			res += "renderingPriority: " + renderingPriority + "\n";
+			res += "id: " + id + "\n";
 			return res;
 	}
 	

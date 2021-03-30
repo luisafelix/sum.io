@@ -1,0 +1,34 @@
+package client.engine;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import common.environment.Player;
+
+public class UserInterface 
+{
+	
+	private EngineHandler callback; 
+	
+	private LabelObject playerCount;
+	
+	public UserInterface(EngineHandler callback)
+	{
+		this.callback = callback;
+		playerCount = new LabelObject(-callback.getWindow().getWidth()/2,-callback.getWindow().getHeight()/2,200,50);
+		System.out.println("Player");
+		//callback.getScreenRender().addToRender(new Player("ball2",0,0,100,100,"ip",100));
+	}
+	
+	public void update()
+	{
+		updatePlayerCount();
+	}
+	
+	private void updatePlayerCount()
+	{
+		
+	}
+	
+}

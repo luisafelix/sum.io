@@ -1,6 +1,7 @@
 package client.engine;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -24,7 +25,7 @@ public class ScreenRender{
 	
 	private BufferStrategy bufferStrategy;
 	
-	private ConcurrentLinkedQueue<GameObject> renderingQueue;
+	private PriorityBlockingQueue<GameObject> renderingQueue;
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
@@ -44,13 +45,15 @@ public class ScreenRender{
 		originX = 0;
 		originY = 0;
 		this.callback = callback;
-		renderingQueue = new ConcurrentLinkedQueue<GameObject>();
+		renderingQueue = new PriorityBlockingQueue<GameObject>();
 		imageMap = new Hashtable<String,BufferedImage>();
 		
 		loadImages();
 		
 		renderThread = new RenderThread(this, TEORICAL_FPS);
 	}
+	
+	public Hashtable<String,BufferedImage> getImageMap(){return imageMap;}
 	
 	public void setOrigin(int x,int y) 
 	{
@@ -141,24 +144,41 @@ public class ScreenRender{
 			do 
 			{
 				Graphics g = bufferStrategy.getDrawGraphics();
-				
+				System.out.println(renderingQueue.size());
 				windowHeight = callback.getWindow().getHeight();
 				windowWidth = callback.getWindow().getWidth();
 				g.clearRect(0, 0, windowWidth, windowHeight);
 				
 				for(GameObject go:renderingQueue)
 				{
+					System.out.println("id: "+ go);
+					
 					BufferedImage currentImage = imageMap.get(go.getName());
 					if(currentImage == null)
 					{
 						currentImage = imageMap.get("noTexture");
 					}
 					
-					int tempPosX = (int)go.getX() - originX;
-					int tempPosY = (int)go.getY() - originY;
+					int tempPosX = 0;
+					int tempPosY = 0;
 					
-					int iX = windowWidth/2 + tempPosX - go.getWidth()/2;
-					int iY = windowHeight/2 + tempPosY - go.getHeight()/2;
+					int iX = 0;
+					int iY = 0;
+					
+					if (go.isAbsolutePath())
+					{
+						tempPosX = (int)go.getX();
+						tempPosY = (int)go.getY();
+						iX = tempPosX- go.getWidth()/2;;
+						iY = tempPosY- go.getHeight()/2;
+					}
+					else
+					{
+						tempPosX = (int)go.getX() - originX;
+						tempPosY = (int)go.getY() - originY;
+						iX = windowWidth/2 + tempPosX - go.getWidth()/2;
+						iY = windowHeight/2 + tempPosY - go.getHeight()/2;
+					}
 					
 					double scaleX = go.getWidth()/(double)currentImage.getWidth();
 					double scaleY = go.getHeight()/(double)currentImage.getHeight();
@@ -186,19 +206,16 @@ public class ScreenRender{
 		}
 		while(bufferStrategy.contentsLost());
 		
-		double nanot2 = System.nanoTime();
+		System.out.println("-");
 		
 		realFps = (int) (1000/(t1-oldT));
-		//System.out.println("FPS: "+ realFps);
-		
-		//System.out.println("Temp de rend: "+ (nanot2-nanot1));
 		oldT=t1;
-		
 	}
 	
 	//FIXME: The implementation of rendering just what is in the screen is worst than just render everything ..., good job!
 	private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
 	{
+		
 		int xCut = 0;
 		int yCut = 0;
 		int wCut = (goWidth);
