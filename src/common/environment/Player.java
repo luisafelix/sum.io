@@ -4,7 +4,8 @@ import java.io.IOException;
 
 public class Player extends GameObject implements CircleColider
 {
-	private final int MAX_SPEED = 10;
+	private final int MAX_SPEED = 15;
+	private final int MAX_BOOST = 25;
 	
 	private String playerIP;
 	private int radiusColider;
@@ -12,10 +13,8 @@ public class Player extends GameObject implements CircleColider
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 1;
-	private double accY = 1;
-	
-	private double energyColision = 1.5;
+	private double accX = 0.5;
+	private double accY = 0.5;
 	
 	private int stunTime = 1000;
 	private boolean flagColision = false;
@@ -68,6 +67,7 @@ public class Player extends GameObject implements CircleColider
 	public void onColision(CircleColider obj2)
 	{
 		//Remove the control from the player to handle the colision
+		
 		if(!getFlagColision())
 		{
 			new RemoveControls(this,stunTime);
@@ -118,8 +118,8 @@ public class Player extends GameObject implements CircleColider
 		double dpTan2 = ((Player)obj2).getSpeedX()*tX + ((Player)obj2).getSpeedY()*tY;
 		
 		//Dot product Normal
-		double dpNorm1 = (speedX*nX + speedY*nY) * energyColision;
-		double dpNorm2 = (((Player)obj2).getSpeedX()*nX + ((Player)obj2).getSpeedY()*nY) * energyColision;
+		double dpNorm1 = (speedX*nX + speedY*nY);
+		double dpNorm2 = (((Player)obj2).getSpeedX()*nX + ((Player)obj2).getSpeedY()*nY);
 		
 		//Energy Created for the colision
 		
@@ -138,30 +138,33 @@ public class Player extends GameObject implements CircleColider
 	
 	public void accelerateX(int direction) 
 	{
-		if(Math.abs(speedX + accX * direction) > MAX_SPEED)
-		{
-			speedX = MAX_SPEED * direction;
-		}
-		else
+		if( ! ((speedY*speedY) + Math.pow((speedX + accX * direction),2) > MAX_SPEED*MAX_SPEED))
 		{
 			speedX = (speedX + accX* direction);
 		}
 	}
 	
 	public void accelerateY(int direction) 
-	{
-		if(Math.abs(speedY + accY*direction) > MAX_SPEED) 
-		{
-			speedY = MAX_SPEED*direction;
-		}
-		else
+	{		
+		if( ! ((speedX*speedX) + Math.pow(speedY + accY*direction,2) > MAX_SPEED*MAX_SPEED) )
 		{
 			speedY = (speedY + accY*direction);
 		}
 	}
 	
-	public boolean isMoving() 
+	public boolean isMoving()
 	{
 		return (speedX != 0 || speedY !=0);
+	}
+
+	public void attackBoost() 
+	{
+		double contributionX = 0;
+		if((Math.abs(speedX)>= 0.001 && Math.abs(speedY) >= 0.001 ))
+		{
+			contributionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
+			speedX = (Math.abs(speedX)/speedX) * MAX_BOOST * contributionX;
+			speedY = (Math.abs(speedY)/speedY) * MAX_BOOST * (1-contributionX);
+		}
 	}
 }

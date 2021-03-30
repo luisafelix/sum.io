@@ -28,6 +28,8 @@ public class ActionHandler
 				case MOVE_DOWN:
 					p.accelerateY(1);
 					break;
+				case ATTACK_BOOST:
+					p.attackBoost();
 			}
 		}
 	}

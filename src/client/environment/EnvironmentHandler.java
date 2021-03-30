@@ -10,6 +10,8 @@ import client.engine.EngineHandler;
 
 public class EnvironmentHandler 
 {
+	public static final int PRIORITYRENDER_UI = 1000;
+	
 	private ArrayList<Player> playerMap;
 	private Platform platform;
 	private Player himself;

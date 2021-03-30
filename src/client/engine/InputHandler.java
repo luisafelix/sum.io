@@ -80,6 +80,9 @@ public class InputHandler
 	{
 		switch(keyId)
 		{
+			case 32:
+				aPack.updateAction(PlayerAction.ATTACK_BOOST);
+			break;
 			case 37:
 				aPack.updateAction(PlayerAction.MOVE_LEFT);
 			break;

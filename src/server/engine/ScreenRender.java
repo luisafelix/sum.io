@@ -1,6 +1,6 @@
 package server.engine;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.JPanel;
@@ -15,12 +15,12 @@ import javax.imageio.ImageIO;
 
 public class ScreenRender extends JPanel{
 	
-	private ConcurrentLinkedQueue<GameObject> renderingQueue;
+	private PriorityBlockingQueue<GameObject> renderingQueue;
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
 	public ScreenRender()
 	{
-		renderingQueue = new ConcurrentLinkedQueue<GameObject>();
+		renderingQueue = new PriorityBlockingQueue<GameObject>();
 		imageMap = new Hashtable<String,BufferedImage>();
 		loadImages();
 	}
@@ -28,7 +28,7 @@ public class ScreenRender extends JPanel{
 	private void loadImages()
 	{
 		//Find all the images names in the res folder
-		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res");
+		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"res"+ System.getProperty("file.separator")+"images");
 		String[] imageNames = res.list();
 		try{
 			for(int i = 0;i < imageNames.length;i++)
@@ -89,6 +89,7 @@ public class ScreenRender extends JPanel{
 		super.paintComponent(g);
 		for(GameObject go:renderingQueue)
 		{
+			
 			BufferedImage currentImage = imageMap.get(go.getName());
 			if(currentImage == null)
 			{
