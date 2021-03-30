@@ -14,18 +14,20 @@ import common.environment.CircleColider;
 import common.environment.Platform;
 import common.environment.Player;
 import server.MainServer;
+import server.inteligence.InteligenceBrain;
 
 public class EnvironmentHandler 
 {
 	
-	private final int PRIORITYRENDER_BACKGROUND = 1;
-	private final int PRIORITYRENDER_PLAYER = 100;
+	public static final int PRIORITYRENDER_BACKGROUND = 1;
+	public static final int PRIORITYRENDER_PLAYER = 100;
 	
 	private final int PLATFORM_SIZE = 1200;
 	
 	private ArrayList<Player> playerMap;
 	private Platform platform;
 	private MainServer callback;
+	private InteligenceBrain inteligenceBrain;
 	
 	private SyncPack syncPack;
 	
@@ -42,8 +44,12 @@ public class EnvironmentHandler
 		playerMap = new ArrayList<Player>();
 		this.callback = callback;
 		syncPack = new SyncPack();
+		
+		inteligenceBrain = new InteligenceBrain(this);
+		
 		setupPlatform();
 		setupUpdateTimer();
+		
 		updateTimer.start();
 	}
 	
@@ -61,12 +67,17 @@ public class EnvironmentHandler
 										50,
 										clientIP,PRIORITYRENDER_PLAYER
 										);
-		clientNumber++;
+		connectPlayer(currentPlayer);
+	}
+	
+	public void connectPlayer(Player currentPlayer)
+	{
 		callback.getEngineHandler().getScreenRender().addToRender(currentPlayer);
 		playerMap.add(currentPlayer);
 		syncPack.addPersonalPlayer(currentPlayer);
 		syncPack.addPlayerMap(playerMap);
 		callback.getCommsHandler().sendSyncPack(syncPack);
+		clientNumber++;
 	}
 	
 	private void setupPlatform()

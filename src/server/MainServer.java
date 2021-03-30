@@ -5,6 +5,7 @@ import common.communication.SyncPack;
 import server.communication.CommsHandler;
 import server.engine.EngineHandler;
 import server.environment.EnvironmentHandler;
+import server.inteligence.InteligenceBrain;
 
 public class MainServer 
 {

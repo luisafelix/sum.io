@@ -64,7 +64,7 @@ public class ScreenRender{
 	private void loadImages()
 	{
 		//Find all the images names in the res folder
-		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res");
+		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res"+ System.getProperty("file.separator")+"images");
 		String[] imageNames = res.list();
 		try{
 			for(int i = 0;i < imageNames.length;i++)
@@ -144,15 +144,12 @@ public class ScreenRender{
 			do 
 			{
 				Graphics g = bufferStrategy.getDrawGraphics();
-				System.out.println(renderingQueue.size());
 				windowHeight = callback.getWindow().getHeight();
 				windowWidth = callback.getWindow().getWidth();
 				g.clearRect(0, 0, windowWidth, windowHeight);
 				
 				for(GameObject go:renderingQueue)
-				{
-					System.out.println("id: "+ go);
-					
+				{	
 					BufferedImage currentImage = imageMap.get(go.getName());
 					if(currentImage == null)
 					{
@@ -205,8 +202,6 @@ public class ScreenRender{
 			
 		}
 		while(bufferStrategy.contentsLost());
-		
-		System.out.println("-");
 		
 		realFps = (int) (1000/(t1-oldT));
 		oldT=t1;
