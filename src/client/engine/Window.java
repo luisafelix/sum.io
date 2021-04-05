@@ -2,6 +2,8 @@ package client.engine;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.renderable.RenderableImage;
 
@@ -13,32 +15,34 @@ public class Window extends JFrame{
 	public final static int BORDER_WIDTH = 7;
 	public final static int BORDER_HEIGHT = 30;
 	
-	private JPanel mainPanel;
+	private EngineHandler callback;
 	
-	public Window(String title, int w, int h)
+	public Window(EngineHandler callback, String title, int w, int h)
 	{
 		super(title);
+		this.callback = callback;
+		
 		setSize(w,h);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
-		mainPanel = new JPanel(new BorderLayout());
-		
-		add(mainPanel);
+		this.addComponentListener(new ComponentAdapter() 
+														{
+														public void componentResized(ComponentEvent componentEvent) {
+															onWindowResized();
+													    }	
+														});
 		setVisible(true);
 		createBufferStrategy(2);
 	}
-
-	public void addPanel(JPanel panel, int position)
+	
+	public void onWindowResized()
 	{
-		mainPanel.add(panel,position);
-		mainPanel.revalidate();
-		mainPanel.repaint();	
-	}
-	public void addPanel(JPanel screen)
-	{
-		this.addPanel(screen,0);
+		if(callback.getUserInterface() != null)
+		{
+			callback.getUserInterface().revalidate();
+		}
 	}
 }
 

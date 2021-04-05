@@ -7,7 +7,7 @@ public interface CircleColider
 	public abstract int getRadiusColider();
 	public abstract void onColision(CircleColider obj2);
 	
-	public default boolean didCollidTo(CircleColider obj2)
+	public default boolean hasCollidedTo(CircleColider obj2)
 	{
 		boolean haveColision = false;
 		
@@ -16,7 +16,7 @@ public interface CircleColider
 		
 		if(xDist + yDist < Math.pow(getRadiusColider() + obj2.getRadiusColider(),2))
 		{
-			haveColision = true;
+			haveColision = !haveColision;
 		}
 		
 		if(haveColision)

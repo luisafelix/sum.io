@@ -34,6 +34,7 @@ public class EnvironmentHandler
 	private Timer updateTimer;
 	private int updateRate = 20;
 	
+	private int playersRemainingCount = 0;
 	private double friction = 0.02;
 	
 	//FIXME: temp
@@ -78,6 +79,20 @@ public class EnvironmentHandler
 		syncPack.addPlayerMap(playerMap);
 		callback.getCommsHandler().sendSyncPack(syncPack);
 		clientNumber++;
+		
+		increasePlayersRemaining();
+	}
+	
+	private void increasePlayersRemaining()
+	{
+		playersRemainingCount++;
+		syncPack.setPlayersRemainingCount(playersRemainingCount);
+	}
+	
+	private void decreasePlayersRemaining()
+	{
+		playersRemainingCount--;
+		syncPack.setPlayersRemainingCount(playersRemainingCount);
 	}
 	
 	private void setupPlatform()
@@ -127,10 +142,21 @@ public class EnvironmentHandler
 		for(int i = 0; i< playerMap.size();i++)
 		{
 			Player p1 = playerMap.get(i);
-			for(int j = 0; j<i ;j++)
+			if(p1.isAwake())
 			{
-				Player p2 = playerMap.get(j);
-				p1.didCollidTo((CircleColider)p2);
+				for(int j = 0; j<i ;j++)
+				{
+					Player p2 = playerMap.get(j);
+					if(p2.isAwake())
+					{
+						onPlayerCollided(p1,p2);
+					}
+				}
+				
+				if(!p1.hasCollidedTo((CircleColider)platform))
+				{
+					onPlayerOut(p1);
+				}
 			}
 		}
 	}
@@ -160,4 +186,15 @@ public class EnvironmentHandler
 		}
 	}
 	
+	private void onPlayerCollided(Player p1,Player p2)
+	{
+		p1.hasCollidedTo((CircleColider)p2);
+	}
+	
+	private void onPlayerOut(Player p)
+	{
+		p.sleepObject();
+		decreasePlayersRemaining();
+		System.out.println(p + "is out");
+	}
 }

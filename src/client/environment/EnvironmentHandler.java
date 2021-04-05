@@ -17,20 +17,35 @@ public class EnvironmentHandler
 	private Player himself;
 	private MainClient callback;
 	
+	private int playersCount = 0;
+	
+	
 	public EnvironmentHandler(MainClient callback)
 	{
 		playerMap = new ArrayList<Player>();
 		this.callback = callback;
 	}
 
-	public int getRemainingPlayers(){return playerMap.size();}
+	public int getRemainingPlayers()
+	{
+		/*int count = 0;
+		for(Player p : playerMap)
+		{
+			if(p.isAwake())
+			{
+				count++;
+			}
+		}*/
+		return playersCount;
+	}
+	
 	public Player getPlayerClient() {return himself;}
 	
 	public void syncClient(SyncPack sPack)
 	{
 		EngineHandler engineHandler = callback.getEngineHandler();
 		this.playerMap = sPack.getPlayerMap();
-		
+		this.playersCount = sPack.getPlayersCount();
 		//Player setup in client side
 		if(himself == null)
 		{
@@ -52,6 +67,11 @@ public class EnvironmentHandler
 				engineHandler.getScreenRender().addToRender((GameObject)p);
 			}
 		}
+		
+		
+		//Center the player
 		callback.getEngineHandler().getScreenRender().setOrigin((int)himself.getX(),(int)himself.getY());
+		
+		callback.getEngineHandler().getUserInterface().update();
 	}
 }

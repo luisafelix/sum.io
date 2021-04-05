@@ -15,19 +15,19 @@ public class EngineHandler {
 	public EngineHandler(MainClient callback)
 	{
 		this.callback = callback;
-		window = new Window("Client",600,600);;
+		window = new Window(this, "Client",600,600);
 		screenRender = new ScreenRender(this,window.getBufferStrategy());
 		inputHandler = new InputHandler(this);
 		window.addKeyListener(new KeyboardListener(inputHandler));
 		
 		userInterface = new UserInterface(this);
-		
 	}
 	
 	public ScreenRender getScreenRender() {return screenRender;}
 	public MainClient getMainClient() {return callback;}
 	public InputHandler getInputHandler() { return inputHandler;}
 	public Window getWindow() { return window;}
+	public UserInterface getUserInterface() {return userInterface;}
 	
 	public void sendActionPack(ActionPack aPack)
 	{

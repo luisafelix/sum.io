@@ -31,7 +31,7 @@ public class ScreenRender{
 	
 	private EngineHandler callback;
 	
-	private final int TEORICAL_FPS = 30;
+	private final int TEORICAL_FPS = 60;
 	private int realFps = TEORICAL_FPS;
 	private double oldT = 0;
 	
@@ -51,6 +51,7 @@ public class ScreenRender{
 		loadImages();
 		
 		renderThread = new RenderThread(this, TEORICAL_FPS);
+		renderThread.start();
 	}
 	
 	public Hashtable<String,BufferedImage> getImageMap(){return imageMap;}
@@ -88,6 +89,7 @@ public class ScreenRender{
 		{	
 		if(g.equals(go)) 
 			{
+				g.setState(go.isAwake());
 				g.setX(go.getX());
 				g.setY(go.getY());
 				return;
@@ -131,13 +133,12 @@ public class ScreenRender{
 		return res;
 	}
 	
+	public int getFpsCount(){return realFps;}
 	
 	public void draw()
 	{
 		//TODO: Get a better way to render
 		double t1 = System.currentTimeMillis();
-		
-		double nanot1 = System.nanoTime();
 		
 		do 
 		{
@@ -150,8 +151,13 @@ public class ScreenRender{
 				
 				for(GameObject go:renderingQueue)
 				{	
+					if(!go.isAwake())
+					{
+						continue;
+					}
+					
 					BufferedImage currentImage = imageMap.get(go.getName());
-					if(currentImage == null)
+					if(currentImage == null && !go.getName().equals("null"))
 					{
 						currentImage = imageMap.get("noTexture");
 					}
@@ -177,10 +183,19 @@ public class ScreenRender{
 						iY = windowHeight/2 + tempPosY - go.getHeight()/2;
 					}
 					
+					g.drawImage(
+							currentImage,
+							iX,
+							iY,
+							(int)go.getWidth(),
+							(int)go.getHeight(),
+							null);
+					
+					/*
 					double scaleX = go.getWidth()/(double)currentImage.getWidth();
 					double scaleY = go.getHeight()/(double)currentImage.getHeight();
-					
-					imageInScreen(
+					*/
+					/*imageInScreen(
 									g,
 									currentImage,
 									iX,
@@ -191,10 +206,13 @@ public class ScreenRender{
 									scaleY,
 									windowWidth,
 									windowHeight
-									);
+									);*/
+					if(go instanceof LabelObject)
+					{
+						((LabelObject)go).draw(g);
+					}
 				}
-				g.dispose();
-				
+				g.dispose();	
 			}
 			while(bufferStrategy.contentsRestored());
 			
@@ -208,7 +226,7 @@ public class ScreenRender{
 	}
 	
 	//FIXME: The implementation of rendering just what is in the screen is worst than just render everything ..., good job!
-	private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
+	/*private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
 	{
 		
 		int xCut = 0;
@@ -279,6 +297,6 @@ public class ScreenRender{
 					(int)(currentImage.getWidth()*xScale),
 					(int)(currentImage.getHeight()*yScale),
 					null);
-	}
+	}*/
 }
 

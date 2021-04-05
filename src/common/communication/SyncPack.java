@@ -11,18 +11,18 @@ public class SyncPack implements java.io.Serializable
 	private Player player;
 	private Platform platform;
 	
-	public SyncPack()
-	{
-
-	}
+	private int playersCount;
+	
+	public void setPlayersRemainingCount(int count) {this.playersCount = count;}
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
 	public Player getPlayer() {return player;}
 	public Platform getPlatform() {return platform;}
+	public int getPlayersCount() {return playersCount;}
 	
 	public void addPlayerMap(ArrayList<Player> playerMap)
 	{
-		this.playerMap = (ArrayList<Player>)playerMap.clone();
+		this.playerMap = playerMap;//(ArrayList<Player>)playerMap.clone();
 	}
 	
 	public void addPersonalPlayer(Player player)

@@ -7,12 +7,12 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	private String name;
 	protected double x;
 	protected double y;
-	private int width;
-	private int height;
-	private int id;
-	private static int idCount = 0;
+	protected int width;
+	protected int height;
+	protected boolean isAwake = true;
 	
 	private boolean isAbsoluteCoordinates = false;
+	
 	
 	public GameObject (String name, int x,int y, int width, int height)
 	{
@@ -22,8 +22,6 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		this.width = width;
 		this.height = height;
 		renderingPriority = 0;
-		id = idCount;
-		idCount++;
 	}
 	
 	public GameObject (String name, int x,int y, int width, int height,int renderingPriority)
@@ -32,7 +30,6 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		this.renderingPriority = renderingPriority;
 	}
 	
-	
 	/*
 	 * GETTERS AND SETTERS
 	*/
@@ -40,6 +37,8 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	public void setRenderingPriority(int renderingPriority){this.renderingPriority=renderingPriority;}
 	public void setAbsolute(boolean absolute) {isAbsoluteCoordinates = absolute;}
 	public boolean isAbsolutePath() {return isAbsoluteCoordinates;}
+	public void sleepObject(){isAwake = false;}
+	public void setState(boolean state) {this.isAwake = state;}
 	
 	public int getWidth(){return width;}
 	public int getHeight(){return height;}
@@ -48,7 +47,8 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	public double getY(){return y;}
 	public void setY(double y) {this.y = y;}
 	public String getName(){return name;}
-	public int getId(){return id;}
+	public boolean isAwake(){return isAwake;}
+	
 	
 	/*
 	 * OVERRIDES
@@ -70,8 +70,6 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	
 		GameObject go = (GameObject)o;
 		
-		if(go.getId() != id){return false;}
-		
 		if(go.getX()==getX() && go.getY() == getY() && go.getWidth() == getWidth() && go.getHeight() == getHeight() && go.getName().equals(getName()))
 		{
 			return true;
@@ -84,7 +82,7 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	public String toString()
 	{
 			String res = "";
-			res += "id: " + id + "\n";
+			res += "name: " + getName() + "\n";
 			return res;
 	}
 	

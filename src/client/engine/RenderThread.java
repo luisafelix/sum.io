@@ -9,7 +9,6 @@ public class RenderThread extends Thread
 		{
 			this.callback = callback;
 			this.framesPerSecond = framesPerSecond;
-			start();
 		}
 		
 		@Override	
