@@ -11,6 +11,7 @@ import common.communication.ActionPack;
 import common.communication.SyncPack;
 import common.environment.ActionHandler;
 import common.environment.CircleColider;
+import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
 import server.MainServer;
@@ -19,12 +20,13 @@ import server.inteligence.InteligenceBrain;
 public class EnvironmentHandler 
 {
 	
-	public static final int PRIORITYRENDER_BACKGROUND = 1;
+	public static final int PRIORITYRENDER_BACKGROUND = 10;
 	public static final int PRIORITYRENDER_PLAYER = 100;
 	
-	private final int PLATFORM_SIZE = 1200;
+	private final int PLATFORM_SIZE = 1600;
 	
 	private ArrayList<Player> playerMap;
+	//private ArrayList<InteractableObject> interactableObjects;
 	private Platform platform;
 	private MainServer callback;
 	private InteligenceBrain inteligenceBrain;
@@ -43,12 +45,15 @@ public class EnvironmentHandler
 	public EnvironmentHandler(MainServer callback)
 	{
 		playerMap = new ArrayList<Player>();
+		//interactableObjects = new ArrayList<InteractableObject>();
+		
 		this.callback = callback;
 		syncPack = new SyncPack();
 		
 		inteligenceBrain = new InteligenceBrain(this);
 		
 		setupPlatform();
+		//setupInteractableObjects(new GameObject("background",0,0,5000,5000,PRIORITYRENDER_BACKGROUND-1));
 		setupUpdateTimer();
 		
 		updateTimer.start();
@@ -61,9 +66,9 @@ public class EnvironmentHandler
 	{
 		//TODO: A system that stores the ips already connected, store the position and the caracteristics of the player
 		Player currentPlayer = new Player(
-										"ball"+clientNumber,
-										(int)( 600* Math.cos(Math.PI/6 *(clientNumber-1))),
-										(int)( 600* Math.sin(Math.PI/6*(clientNumber-1))),
+										"devil",
+										(int)( 700* Math.cos(Math.PI/6 *(clientNumber-1))),
+										(int)( 700* Math.sin(Math.PI/6*(clientNumber-1))),
 										50,
 										50,
 										clientIP,PRIORITYRENDER_PLAYER
@@ -97,11 +102,20 @@ public class EnvironmentHandler
 	
 	private void setupPlatform()
 	{
-		Platform platform = new Platform("platform2",0,0,1600,1600,PRIORITYRENDER_BACKGROUND);
+		Platform platform = new Platform("platform",0,0,PLATFORM_SIZE,PLATFORM_SIZE,PRIORITYRENDER_BACKGROUND);
 		callback.getEngineHandler().getScreenRender().addToRender(platform);
 		this.platform = platform;
 		syncPack.addPlatform(platform);
 	}
+	
+	/*
+	private void setupinteractableObjects(GameObject object)
+	{
+		callback.getEngineHandler().getScreenRender().addToRender(object);
+		interactableObjects.add(object);
+		syncPack.addInteractableObject(interactableObjects);
+	}*/
+	
 	
 	private void setupUpdateTimer()
 	{
@@ -195,6 +209,5 @@ public class EnvironmentHandler
 	{
 		p.sleepObject();
 		decreasePlayersRemaining();
-		System.out.println(p + "is out");
 	}
 }

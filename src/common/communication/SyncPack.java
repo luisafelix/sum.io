@@ -8,7 +8,8 @@ import common.environment.Player;
 public class SyncPack implements java.io.Serializable
 {
 	private ArrayList<Player> playerMap;
-	private Player player;
+	//private ArrayList<InteractableObject> interactableObjects;
+	private Player player; 
 	private Platform platform;
 	
 	private int playersCount;
@@ -19,6 +20,7 @@ public class SyncPack implements java.io.Serializable
 	public Player getPlayer() {return player;}
 	public Platform getPlatform() {return platform;}
 	public int getPlayersCount() {return playersCount;}
+	//public ArrayList<InteractableObject> getInteractableObjects() {return interactableObjects;}
 	
 	public void addPlayerMap(ArrayList<Player> playerMap)
 	{
@@ -34,4 +36,12 @@ public class SyncPack implements java.io.Serializable
 	{
 		this.platform = platform;
 	}
+	
+	/*
+	public void addInteractableObject(ArrayList<GameObject> interactableObjects) 
+	{
+		this.interactableObjects = interactableObjects;
+	}*/
+
+
 }

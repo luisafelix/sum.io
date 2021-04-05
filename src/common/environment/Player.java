@@ -12,8 +12,8 @@ public class Player extends GameObject implements CircleColider
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 0.5;
-	private double accY = 0.5;
+	private double accX = 0.8;
+	private double accY = 0.8;
 	
 	private int stunTime = 1000;
 	private boolean flagColision = false;

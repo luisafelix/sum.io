@@ -18,4 +18,5 @@ public class Platform extends GameObject implements CircleColider{
 	{
 		
 	}
+
 }

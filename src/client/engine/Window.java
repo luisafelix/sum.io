@@ -2,6 +2,7 @@ package client.engine;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyListener;
@@ -24,9 +25,10 @@ public class Window extends JFrame{
 		
 		setSize(w,h);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBackground(new Color(142,203,224));
 		
 		setLocationRelativeTo(null);
-		setLayout(new BorderLayout());
+		
 		this.addComponentListener(new ComponentAdapter() 
 														{
 														public void componentResized(ComponentEvent componentEvent) {

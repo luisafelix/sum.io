@@ -15,6 +15,7 @@ public class LabelObject extends GameObject
 	private String labelText;
 	
 	private Font font;
+	private Color fontColor;
 	
 	public LabelObject(int x, int y, int width, int height, int fontSize, String background)
 	{
@@ -22,7 +23,8 @@ public class LabelObject extends GameObject
 		setAbsolute(true);
 		labelText = "";
 		
-		font = new Font("TimesRoman", Font.BOLD, fontSize);
+		font = new Font("Verdana", Font.BOLD, fontSize);
+		fontColor = new Color(14,44,83);
 	}
 	
 	
@@ -30,14 +32,14 @@ public class LabelObject extends GameObject
 	public void draw(Graphics g)
 	{
 		
-		g.setColor(Color.BLACK);
+		g.setColor(fontColor);
 		
 		FontMetrics metrics = g.getFontMetrics(font);
 		
 		double newX = x - metrics.stringWidth(labelText)/2;
-		double newY = y - metrics.getHeight()/2;
+		double newY = y + metrics.getHeight()/4;
 		g.setFont(font); 
-		g.drawString(labelText, (int)newX, (int)y);
+		g.drawString(labelText, (int)newX, (int)newY);
 	
 	}
 	

@@ -10,7 +10,7 @@ public class UserInterface
 {
 	private final int PLAYERCOUNT_WIDTH = 200;
 	private final int PLAYERCOUNT_HEIGHT = 50;
-	private final int PLAYERCOUNT_FONTSIZE = 20;
+	private final int PLAYERCOUNT_FONTSIZE = 14;
 	
 	private final int FPSCOUNT_WIDTH = 50;
 	private final int FPSCOUNT_HEIGHT = 25;
@@ -23,8 +23,8 @@ public class UserInterface
 	public UserInterface(EngineHandler callback)
 	{
 		this.callback = callback;
-		playerCount = new LabelObject(+PLAYERCOUNT_WIDTH/2+Window.BORDER_WIDTH,
-									+PLAYERCOUNT_HEIGHT/2+Window.BORDER_HEIGHT,
+		playerCount = new LabelObject(+PLAYERCOUNT_WIDTH/2 + Window.BORDER_WIDTH + 20,
+									+PLAYERCOUNT_HEIGHT/2 + Window.BORDER_HEIGHT + 20,
 									PLAYERCOUNT_WIDTH,
 									PLAYERCOUNT_HEIGHT, 
 									PLAYERCOUNT_FONTSIZE,

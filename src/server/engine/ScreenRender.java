@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import common.environment.GameObject;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -22,6 +23,7 @@ public class ScreenRender extends JPanel{
 	{
 		renderingQueue = new PriorityBlockingQueue<GameObject>();
 		imageMap = new Hashtable<String,BufferedImage>();
+		setBackground(new Color(142,203,224));
 		loadImages();
 	}
 	
@@ -89,6 +91,10 @@ public class ScreenRender extends JPanel{
 		super.paintComponent(g);
 		for(GameObject go:renderingQueue)
 		{
+			if(!go.isAwake())
+			{
+				continue;
+			}
 			
 			BufferedImage currentImage = imageMap.get(go.getName());
 			if(currentImage == null)
@@ -96,8 +102,8 @@ public class ScreenRender extends JPanel{
 				currentImage = imageMap.get("noTexture");
 			}
 			g.drawImage(currentImage,
-					this.getWidth()/2 + (int)go.getX()-go.getWidth()/2,
-					this.getHeight()/2 + (int)go.getY()-go.getHeight()/2,
+					this.getWidth()/2 + (int)(go.getX()-go.getWidth()/2.0),
+					this.getHeight()/2 + (int)(go.getY()-go.getHeight()/2.0),
 					go.getWidth(),
 					go.getHeight(),
 					null);

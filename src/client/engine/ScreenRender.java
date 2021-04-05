@@ -7,6 +7,7 @@ import java.util.Hashtable;
 
 import common.environment.GameObject;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
@@ -147,6 +148,7 @@ public class ScreenRender{
 				Graphics g = bufferStrategy.getDrawGraphics();
 				windowHeight = callback.getWindow().getHeight();
 				windowWidth = callback.getWindow().getWidth();
+				
 				g.clearRect(0, 0, windowWidth, windowHeight);
 				
 				for(GameObject go:renderingQueue)
@@ -162,34 +164,35 @@ public class ScreenRender{
 						currentImage = imageMap.get("noTexture");
 					}
 					
-					int tempPosX = 0;
-					int tempPosY = 0;
+					double tempPosX = 0;
+					double tempPosY = 0;
 					
-					int iX = 0;
-					int iY = 0;
+					double iX = 0;
+					double iY = 0;
 					
 					if (go.isAbsolutePath())
 					{
-						tempPosX = (int)go.getX();
-						tempPosY = (int)go.getY();
-						iX = tempPosX- go.getWidth()/2;;
-						iY = tempPosY- go.getHeight()/2;
+						tempPosX = go.getX();
+						tempPosY = go.getY();
+						iX = tempPosX- go.getWidth()/2.0;;
+						iY = tempPosY- go.getHeight()/2.0;
 					}
 					else
 					{
-						tempPosX = (int)go.getX() - originX;
-						tempPosY = (int)go.getY() - originY;
-						iX = windowWidth/2 + tempPosX - go.getWidth()/2;
-						iY = windowHeight/2 + tempPosY - go.getHeight()/2;
+						tempPosX = go.getX() - originX;
+						tempPosY = go.getY() - originY;
+						iX = windowWidth/2.0 + tempPosX - go.getWidth()/2.0;
+						iY = windowHeight/2.0 + tempPosY - go.getHeight()/2.0;
 					}
 					
 					g.drawImage(
 							currentImage,
-							iX,
-							iY,
+							(int)iX,
+							(int)iY,
 							(int)go.getWidth(),
 							(int)go.getHeight(),
 							null);
+					
 					
 					/*
 					double scaleX = go.getWidth()/(double)currentImage.getWidth();

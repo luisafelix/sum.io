@@ -13,6 +13,7 @@ public class EnvironmentHandler
 	public static final int PRIORITYRENDER_UI = 1000;
 	
 	private ArrayList<Player> playerMap;
+	//private ArrayList<InteractableObjects> interactableObjects;
 	private Platform platform;
 	private Player himself;
 	private MainClient callback;
@@ -23,6 +24,7 @@ public class EnvironmentHandler
 	public EnvironmentHandler(MainClient callback)
 	{
 		playerMap = new ArrayList<Player>();
+		//interactableObjects = new ArrayList<InteractableObjects>();
 		this.callback = callback;
 	}
 
@@ -53,6 +55,16 @@ public class EnvironmentHandler
 			callback.getEngineHandler().getInputHandler().setPlayer(himself);
 		}
 		
+		if(engineHandler != null)
+		{
+			for(Player p : playerMap)
+			{
+				engineHandler.getScreenRender().addToRender((GameObject)p);
+			}
+			
+			
+		}
+		
 		//Platform setup in client side
 		if(platform == null)
 		{
@@ -60,17 +72,16 @@ public class EnvironmentHandler
 			engineHandler.getScreenRender().addToRender((GameObject)this.platform);
 		}
 		
-		if(engineHandler != null)
-		{
-			for(Player p : playerMap)
-			{
-				engineHandler.getScreenRender().addToRender((GameObject)p);
-			}
-		}
-		
-		
 		//Center the player
 		callback.getEngineHandler().getScreenRender().setOrigin((int)himself.getX(),(int)himself.getY());
+		
+		/*
+		if(engineHandler != null && nonInteractableObjects.size() != sPack.getNonInteractableObjects().size())
+		{
+			interactableObjects = sPack.getinteractableObjects();
+			engineHandler.getScreenRender().addToRender(interactableObjects);
+		}
+		*/
 		
 		callback.getEngineHandler().getUserInterface().update();
 	}
