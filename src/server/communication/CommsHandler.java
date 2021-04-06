@@ -14,6 +14,7 @@ import common.communication.ActionPack;
 import common.communication.SyncPack;
 import common.environment.Player;
 import server.MainServer;
+import server.inteligence.PlayerBot;
 
 public class CommsHandler extends Thread
 {
@@ -98,8 +99,31 @@ public class CommsHandler extends Thread
 	
 	public void generateSyncPack()
 	{
+		if(callback.getEnvironmentHandler() == null)
+		{
+			return;
+		}
+		
 		SyncPack sPack = callback.getEnvironmentHandler().getSyncPack();
-		sendSyncPack(sPack);
+		
+		//We create a new player to avoid serializing things that don't need to be.
+		//(Do not serialize an instance of player bot)
+		
+		SyncPack newSPack = new SyncPack(sPack);
+		ArrayList<Player> playerMap = sPack.getPlayerMap();
+		ArrayList<Player> onlyPlayerInstance = new ArrayList<Player>();
+		for(Player p : playerMap)
+		{
+			if(p instanceof PlayerBot)
+			{
+				onlyPlayerInstance.add(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake()));
+				continue;
+			}
+			onlyPlayerInstance.add(p);
+		}
+		newSPack.setPlayerMap(onlyPlayerInstance);
+		
+		sendSyncPack(newSPack);
 	}
 
 	public void actionPackReceived(ActionPack aPack)

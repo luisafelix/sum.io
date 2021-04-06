@@ -48,6 +48,7 @@ public class EnvironmentHandler
 		EngineHandler engineHandler = callback.getEngineHandler();
 		this.playerMap = sPack.getPlayerMap();
 		this.playersCount = sPack.getPlayersCount();
+		
 		//Player setup in client side
 		if(himself == null)
 		{

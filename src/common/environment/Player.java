@@ -2,6 +2,8 @@ package common.environment;
 
 import java.io.IOException;
 
+import server.inteligence.PlayerBot;
+
 public class Player extends GameObject implements CircleColider
 {
 	private final int MAX_SPEED = 15;
@@ -18,13 +20,21 @@ public class Player extends GameObject implements CircleColider
 	private int stunTime = 1000;
 	private boolean flagColision = false;
 	
-	public Player(String name, int x, int y, int width, int height, String playerIP,int priorityRender) 
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
 		this.radiusColider = width/2;
 	}
 	
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake) 
+	{
+		super(name, x, y, width, height, priorityRender);
+		this.playerIP = playerIP;
+		this.radiusColider = width/2;
+		this.isAwake = isAwake;
+	}
+
 	public String getPlayerIP() {return playerIP;}
 	public double getSpeedX() {return speedX;}
 	public double getSpeedY() {return speedY;}

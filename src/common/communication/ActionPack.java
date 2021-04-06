@@ -46,6 +46,11 @@ public class ActionPack implements java.io.Serializable
 		return res;
 	}
 	
+	public void reset()
+	{
+		playerActionList.clear();
+	}
+	
 	public boolean isEmpty() 
 	{	
 		return this.playerActionList.isEmpty();

@@ -2,6 +2,7 @@ package server.environment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -16,8 +17,9 @@ import common.environment.Platform;
 import common.environment.Player;
 import server.MainServer;
 import server.inteligence.InteligenceBrain;
+import server.inteligence.PlayerBot;
 
-public class EnvironmentHandler 
+public class EnvironmentHandler
 {
 	
 	public static final int PRIORITYRENDER_BACKGROUND = 10;
@@ -55,8 +57,16 @@ public class EnvironmentHandler
 		setupPlatform();
 		//setupInteractableObjects(new GameObject("background",0,0,5000,5000,PRIORITYRENDER_BACKGROUND-1));
 		setupUpdateTimer();
-		
 		updateTimer.start();
+		
+		inteligenceBrain.createBot(0, 0);
+		
+		/*
+		for(int i = 0; i< 12; i++)
+		{
+			inteligenceBrain.createBot((int)(700*Math.cos(i*Math.PI/6)),(int)( 700*Math.sin(i*Math.PI/6)));
+		}
+		*/
 	}
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
@@ -78,14 +88,18 @@ public class EnvironmentHandler
 	
 	public void connectPlayer(Player currentPlayer)
 	{
+		System.out.println(currentPlayer);
 		callback.getEngineHandler().getScreenRender().addToRender(currentPlayer);
 		playerMap.add(currentPlayer);
 		syncPack.addPersonalPlayer(currentPlayer);
-		syncPack.addPlayerMap(playerMap);
-		callback.getCommsHandler().sendSyncPack(syncPack);
-		clientNumber++;
 		
+		syncPack.addPlayerMap(playerMap);
+		
+		callback.getCommsHandler().generateSyncPack();
+		clientNumber++;
 		increasePlayersRemaining();
+		
+		callback.getEngineHandler().getScreenRender().repaint();
 	}
 	
 	private void increasePlayersRemaining()
@@ -207,6 +221,10 @@ public class EnvironmentHandler
 	
 	private void onPlayerOut(Player p)
 	{
+		if(p instanceof PlayerBot)
+		{
+			//TODO: Destroy bot
+		}
 		p.sleepObject();
 		decreasePlayersRemaining();
 	}

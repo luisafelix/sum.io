@@ -2,6 +2,8 @@ package server.inteligence;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.Timer;
@@ -11,24 +13,35 @@ import common.environment.ActionHandler;
 import common.environment.Player;
 import server.environment.EnvironmentHandler;
 
-public class InteligenceBrain 
+public class InteligenceBrain
 {
 
-	private LinkedList<PlayerBot> bots;
+	private ArrayList<PlayerBot> bots;
 	private EnvironmentHandler callback;
+	private ArrayList<Player> playerMap;
 	
 	private Timer updateTimer;
 	private int updateRate = 20;
 	
+	private static int botCount = 0;
+	
 	public InteligenceBrain(EnvironmentHandler callback)
 	{
-		bots = new LinkedList<PlayerBot>();
-		PlayerBot pb1 = new PlayerBot("ball11",0,0,50,50);
-		bots.add(pb1);
-		callback.connectPlayer(pb1);
-		
+		bots = new ArrayList<PlayerBot>();
+		this.callback = callback;
 		setupUpdateTimer();
 		updateTimer.start();
+	}
+	
+	public EnvironmentHandler getEnvironmentHandler() {return callback;}
+	
+	public void createBot(int botX,int botY)
+	{
+		PlayerBot pb = new PlayerBot(this,"ball11",botX,botY,50,50,botCount);
+		bots.add(pb);
+		callback.connectPlayer(pb);
+		botCount++;
+		
 	}
 	
 	private void setupUpdateTimer()
@@ -44,6 +57,9 @@ public class InteligenceBrain
 	
 	private void updateBotAction()
 	{
-		bots.get(0).updateAction();
+		for(PlayerBot p : bots )
+		{
+			p.updateAction();
+		}
 	}
 }
