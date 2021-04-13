@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import common.communication.LobbyPack;
 import common.communication.SyncPack;
 
 public class SendHandler{
@@ -11,7 +12,8 @@ public class SendHandler{
 	private Socket socket;
 	private ObjectOutputStream toClient;
 	
-	public SendHandler(Socket socket){
+	public SendHandler(Socket socket)
+	{
 		this.socket = socket;
 		try
 		{
@@ -24,7 +26,8 @@ public class SendHandler{
 	}
 	
 	//TODO: Some updates to the client in a determinated time.
-	public void send(SyncPack sPack){
+	public void sendSyncPack(SyncPack sPack)
+	{
 		try
 		{
 			toClient.writeObject(sPack);
@@ -32,10 +35,21 @@ public class SendHandler{
 		}
 		catch(Exception e){
 		}
-
 	}
 	
-	public void close(){
+	public void sendLobbyPack(LobbyPack lPack)
+	{
+		try
+		{
+			toClient.writeObject(lPack);
+			toClient.reset();
+		}
+		catch(Exception e){
+		}
+	}
+	
+	public void close()
+	{
 		try
 		{
 			if(socket !=null)

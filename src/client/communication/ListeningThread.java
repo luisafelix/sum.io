@@ -2,6 +2,8 @@ package client.communication;
 
 import java.net.Socket;
 import java.net.SocketException;
+
+import common.communication.LobbyPack;
 import common.communication.SyncPack;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,10 +36,16 @@ public class ListeningThread extends Thread{
 					if(objectReceived==null)
 					{
 						loop = false;
-					}else if (objectReceived instanceof SyncPack)
+					}
+					else if (objectReceived instanceof SyncPack)
 					{
 						SyncPack sPack = (SyncPack)objectReceived;
-						callback.receive(sPack);
+						callback.receiveSyncPack(sPack);
+					}
+					else if(objectReceived instanceof LobbyPack)
+					{
+						LobbyPack lPack = (LobbyPack)objectReceived;
+						callback.receiveLobbyPack(lPack);
 					}
 				}
 				catch(ClassNotFoundException e)

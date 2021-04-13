@@ -8,6 +8,10 @@ import common.environment.Platform;
 import common.environment.Player;
 import client.engine.EngineHandler;
 
+/*
+ * This class is responsible to receive the SyncPack and update the client conditions.
+ */
+
 public class EnvironmentHandler 
 {
 	public static final int PRIORITYRENDER_UI = 1000;
@@ -15,7 +19,7 @@ public class EnvironmentHandler
 	private ArrayList<Player> playerMap;
 	//private ArrayList<InteractableObjects> interactableObjects;
 	private Platform platform;
-	private Player himself;
+	private Player player;
 	private MainClient callback;
 	
 	private int playersCount = 0;
@@ -30,18 +34,11 @@ public class EnvironmentHandler
 
 	public int getRemainingPlayers()
 	{
-		/*int count = 0;
-		for(Player p : playerMap)
-		{
-			if(p.isAwake())
-			{
-				count++;
-			}
-		}*/
 		return playersCount;
 	}
 	
-	public Player getPlayerClient() {return himself;}
+	public Player getPlayerClient() {return player;}
+	
 	
 	public void syncClient(SyncPack sPack)
 	{
@@ -49,11 +46,17 @@ public class EnvironmentHandler
 		this.playerMap = sPack.getPlayerMap();
 		this.playersCount = sPack.getPlayersCount();
 		
-		//Player setup in client side
-		if(himself == null)
+		//the current client player is set in this part of the code.
+		if(player == null)
 		{
-			himself = sPack.getPlayer();
-			callback.getEngineHandler().getInputHandler().setPlayer(himself);
+			for(Player p: playerMap)
+			{
+				if(p.getPlayerIP().equals(callback.getLobbyHandler().getPlayer()))
+				{
+					player = p;
+					callback.getEngineHandler().getInputHandler().setPlayer(p);
+				}
+			}
 		}
 		
 		if(engineHandler != null)
@@ -62,8 +65,6 @@ public class EnvironmentHandler
 			{
 				engineHandler.getScreenRender().addToRender((GameObject)p);
 			}
-			
-			
 		}
 		
 		//Platform setup in client side
@@ -73,8 +74,11 @@ public class EnvironmentHandler
 			engineHandler.getScreenRender().addToRender((GameObject)this.platform);
 		}
 		
-		//Center the player
-		callback.getEngineHandler().getScreenRender().setOrigin((int)himself.getX(),(int)himself.getY());
+		//Center the player and make the things move as the player moves.
+		if(player != null)
+		{
+			callback.getEngineHandler().getScreenRender().setOrigin((int)player.getX(),(int)player.getY());
+		}
 		
 		/*
 		if(engineHandler != null && nonInteractableObjects.size() != sPack.getNonInteractableObjects().size())
@@ -83,7 +87,6 @@ public class EnvironmentHandler
 			engineHandler.getScreenRender().addToRender(interactableObjects);
 		}
 		*/
-		
 		callback.getEngineHandler().getUserInterface().update();
 	}
 }

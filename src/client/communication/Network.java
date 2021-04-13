@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 import client.engine.InputHandler;
 import common.communication.ActionPack;
+import common.communication.LobbyPack;
 
 public class Network {
 
@@ -23,7 +24,6 @@ public class Network {
 	
 	public void connect(String ip, int port)
 	{
-		
 		 try 
 		 {
 			 socket = new Socket(ip,port);
@@ -67,6 +67,21 @@ public class Network {
 		{
 			 e.printStackTrace();
 	         System.exit(1);
+		}
+	}
+
+	public void sendLobbyPack(LobbyPack lPack) 
+	{
+		try 
+		{
+			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new ActionPack that is a clone from the before.
+			LobbyPack lobbyPack = new LobbyPack(lPack);
+			//System.out.println(lobbyPack.getPlayer());
+			objectOutput.writeObject(lobbyPack);
+		}
+		catch(IOException e)
+		{
+			close();
 		}
 	}
 }

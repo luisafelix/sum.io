@@ -59,6 +59,12 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	{
 		if(this.renderingPriority > go.getRenderingPriority()){return 1;}
 		if(this.renderingPriority < go.getRenderingPriority()){return -1;}
+		//To let the compareTo consistent
+		if(go.equals(this))
+		{
+			return 1;
+		}
+		
 		return 0;
 	}
 	

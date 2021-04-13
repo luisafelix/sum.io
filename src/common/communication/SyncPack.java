@@ -37,7 +37,7 @@ public class SyncPack implements java.io.Serializable
 	
 	public void addPlayerMap(ArrayList<Player> playerMap)
 	{
-		this.playerMap = playerMap;//(ArrayList<Player>)playerMap.clone();
+		this.playerMap = playerMap;
 	}
 	
 	public void addPersonalPlayer(Player player)

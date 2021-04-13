@@ -10,33 +10,51 @@ import java.awt.image.renderable.RenderableImage;
 
 import javax.swing.JPanel;
 
-public class Window extends JFrame{
+public class Window{
 	
 	//FIXME: Hard coded
 	public final static int BORDER_WIDTH = 7;
 	public final static int BORDER_HEIGHT = 30;
 	
 	private EngineHandler callback;
+	private JFrame window;
 	
 	public Window(EngineHandler callback, String title, int w, int h)
 	{
-		super(title);
+		window = new JFrame(title);
 		this.callback = callback;
 		
-		setSize(w,h);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBackground(new Color(142,203,224));
+		window.setSize(w,h);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setBackground(new Color(142,203,224));
 		
-		setLocationRelativeTo(null);
+		window.setLocationRelativeTo(null);
 		
-		this.addComponentListener(new ComponentAdapter() 
+		window.addComponentListener(new ComponentAdapter() 
 														{
 														public void componentResized(ComponentEvent componentEvent) {
 															onWindowResized();
 													    }	
 														});
-		setVisible(true);
-		createBufferStrategy(2);
+		window.setVisible(true);
+		window.createBufferStrategy(2);
+	}
+	
+	public Window(EngineHandler callback, JFrame window)
+	{
+		this.window = window;
+		this.window.removeAll();
+		
+		this.callback = callback;
+		
+		window.setBackground(new Color(142,203,224));
+		window.addComponentListener(new ComponentAdapter() 
+		{
+		public void componentResized(ComponentEvent componentEvent) {
+			onWindowResized();
+	    }	
+		});
+		window.createBufferStrategy(2);
 	}
 	
 	public void onWindowResized()
@@ -46,5 +64,7 @@ public class Window extends JFrame{
 			callback.getUserInterface().revalidate();
 		}
 	}
+
+	public JFrame getJFrame() {return window;}
 }
 

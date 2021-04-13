@@ -41,7 +41,6 @@ public class InteligenceBrain
 		bots.add(pb);
 		callback.connectPlayer(pb);
 		botCount++;
-		
 	}
 	
 	private void setupUpdateTimer()

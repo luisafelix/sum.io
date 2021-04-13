@@ -37,75 +37,38 @@ public class FollowState extends AbstractFSMState
 	public boolean exitState()
 	{
 		boolean base = super.exitState();
-		
 		target = null;
-		
 		return base;
 	}
 	
 	@Override
 	public void updateState() 
 	{
-		ActionPack aPack = player.getActionPack();
-		LinkedList<PlayerAction> playerActionList = aPack.getPlayerActionList();
-		
+		//aPack.reset();
 		double wishPosX = target.getX() + target.getSpeedX();
 		double wishPosY = target.getY() + target.getSpeedY();
 		
 		double directionX = wishPosX - player.getX();
 		double directionY = wishPosY - player.getY();
 		
-		//aPack.reset();
-		
-		
-		if(directionX > 0)
+		player.moveTo(directionX,directionY);
+		//Lose the target when mission accomplished
+		if(!target.isAwake())
 		{
-			if(playerActionList.contains(PlayerAction.MOVE_LEFT))
-			{
-				aPack.updateAction(PlayerAction.MOVE_LEFT);
-			}
-			if(!playerActionList.contains(PlayerAction.MOVE_RIGHT))
-			{
-				aPack.updateAction(PlayerAction.MOVE_RIGHT);
-			}
-		}
-		else if(directionX < 0)
-		{
-			if(playerActionList.contains(PlayerAction.MOVE_RIGHT))
-			{
-				aPack.updateAction(PlayerAction.MOVE_RIGHT);
-			}
-			
-			if(!playerActionList.contains(PlayerAction.MOVE_LEFT))
-			{
-				aPack.updateAction(PlayerAction.MOVE_LEFT);
-			}
+			target = null;
+			this.exitState();
+			player.getFiniteStateMachine().enterState(new IdleState(player.getInteligenceBrain(),player));
+			return;
 		}
 		
-		if(directionY < 0)
+		//Lose the player when the bot is following him
+		if(player.squareDistanceTo(target)>Math.pow(player.getBotViewRange(),2))
 		{
-			if(playerActionList.contains(PlayerAction.MOVE_DOWN))
-			{
-				aPack.updateAction(PlayerAction.MOVE_DOWN);
-			}
-			
-			if(!playerActionList.contains(PlayerAction.MOVE_UP))
-			{
-				aPack.updateAction(PlayerAction.MOVE_UP);
-			}
+			target = null;
+			this.exitState();
+			player.getFiniteStateMachine().enterState(new IdleState(player.getInteligenceBrain(),player));
+			return;
 		}
-		else if(directionY > 0)
-		{
-			if(playerActionList.contains(PlayerAction.MOVE_UP))
-			{
-				aPack.updateAction(PlayerAction.MOVE_UP);
-			}
-			if(!playerActionList.contains(PlayerAction.MOVE_DOWN))
-			{
-				aPack.updateAction(PlayerAction.MOVE_DOWN);
-			}
-		}
-		ActionHandler.doPlayerAction(aPack);
 		
 	}
 

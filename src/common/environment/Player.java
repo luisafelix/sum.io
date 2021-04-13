@@ -14,13 +14,16 @@ public class Player extends GameObject implements CircleColider
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 0.8;
-	private double accY = 0.8;
+	private double accX = 1.2;
+	private double accY = 1.2;
 	
-	private int stunTime = 1000;
+	private int stunTime = 500;
 	private boolean flagColision = false;
 	
-	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender) 
+	private int boostQuantity = 100;
+	private int boostCost = 1;
+	
+	public Player(String name, double x, double y, int width, int height,String playerIP ,int priorityRender) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
@@ -49,8 +52,10 @@ public class Player extends GameObject implements CircleColider
 	public boolean getFlagColision() {return flagColision;}
 	public void setFlagColision(boolean flagColision) {this.flagColision = flagColision;}
 	
+	public int getBoostQuantity(){return boostQuantity;}
+	
 	public boolean equals(Object o)
-	{
+	{	
 		if(o == null)
 		{
 			return false;
@@ -60,6 +65,7 @@ public class Player extends GameObject implements CircleColider
 			return false;
 		}
 		Player p = (Player)o;
+		
 		if(!( p.getPlayerIP().equals(this.playerIP)))
 		{
 			return false;
@@ -70,7 +76,7 @@ public class Player extends GameObject implements CircleColider
 	public String toString()
 	{
 		//FIXME: Hard coded
-		return "P:"+ this.getName();
+		return "P:"+ this.getPlayerIP();
 	}
 	
 	public void onColision(CircleColider obj2)
@@ -174,12 +180,17 @@ public class Player extends GameObject implements CircleColider
 	//TODO: Change how the attackboost works.
 	public void attackBoost() 
 	{
-		double contributionX = 0;
-		if((Math.abs(speedX)>= 0.001 && Math.abs(speedY) >= 0.001 ))
+		if(boostQuantity - boostCost > 0)
 		{
-			contributionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
-			speedX = (Math.abs(speedX)/speedX) * MAX_BOOST * contributionX;
-			speedY = (Math.abs(speedY)/speedY) * MAX_BOOST * (1-contributionX);
+			double directionX = 0;
+			if((Math.abs(speedX)>= 0.0001 && Math.abs(speedY) >= 0.0001 ))
+			{
+				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
+				speedX = (Math.abs(speedX)/speedX) * MAX_BOOST * directionX;
+				speedY = (Math.abs(speedY)/speedY) * MAX_BOOST * (1-directionX);
+				
+				boostQuantity-=boostCost;
+			}
 		}
 	}
 }

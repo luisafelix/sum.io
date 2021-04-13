@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import common.communication.ActionPack;
+import common.communication.LobbyPack;
 import common.communication.SyncPack;
 
 public class ClientConnexion extends Thread
@@ -46,6 +47,11 @@ public class ClientConnexion extends Thread
 					actionPack = (ActionPack)o;
 					actionPackReceived(actionPack);
 				}
+				else if(o instanceof LobbyPack)
+				{
+					LobbyPack lPack = (LobbyPack)o;
+					lobbyPackReceived(lPack);
+				}
 				else
 				{
 					System.out.println("Object received isn't an Action");
@@ -75,6 +81,10 @@ public class ClientConnexion extends Thread
 		{
 			
 		}
+	}
+	private void lobbyPackReceived(LobbyPack lPack)
+	{
+		callback.lobbyPackReceived(lPack);
 	}
 	
 	private void actionPackReceived(ActionPack aPack)

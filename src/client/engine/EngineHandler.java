@@ -1,5 +1,7 @@
 package client.engine;
 
+import javax.swing.JFrame;
+
 import client.MainClient;
 import common.communication.ActionPack;
 import common.environment.ActionHandler;
@@ -12,13 +14,17 @@ public class EngineHandler {
 	private MainClient callback;
 	private UserInterface userInterface;
 	
-	public EngineHandler(MainClient callback)
+	public EngineHandler(MainClient callback, JFrame jframe)
 	{
 		this.callback = callback;
-		window = new Window(this, "Client",600,600);
-		screenRender = new ScreenRender(this,window.getBufferStrategy());
+		this.window = new Window(this,jframe);
+		
+		screenRender = new ScreenRender(this,window.getJFrame().getBufferStrategy());
 		inputHandler = new InputHandler(this);
-		window.addKeyListener(new KeyboardListener(inputHandler));
+		
+		//Why i need this to work properly ?
+		this.window.getJFrame().requestFocus();
+		window.getJFrame().addKeyListener(new KeyboardListener(inputHandler));
 		
 		userInterface = new UserInterface(this);
 	}

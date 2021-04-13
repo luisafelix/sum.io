@@ -15,22 +15,22 @@ import common.environment.CircleColider;
 import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
-import server.MainServer;
+import server.LaunchServer;
 import server.inteligence.InteligenceBrain;
 import server.inteligence.PlayerBot;
 
 public class EnvironmentHandler
 {
 	
-	public static final int PRIORITYRENDER_BACKGROUND = 10;
-	public static final int PRIORITYRENDER_PLAYER = 100;
+	public static final int PRIORITYRENDER_BACKGROUND = 100;
+	public static final int PRIORITYRENDER_PLAYER = 1000;
 	
 	private final int PLATFORM_SIZE = 1600;
 	
 	private ArrayList<Player> playerMap;
 	//private ArrayList<InteractableObject> interactableObjects;
 	private Platform platform;
-	private MainServer callback;
+	private LaunchServer callback;
 	private InteligenceBrain inteligenceBrain;
 	
 	private SyncPack syncPack;
@@ -42,9 +42,9 @@ public class EnvironmentHandler
 	private double friction = 0.02;
 	
 	//FIXME: temp
-	private static int clientNumber = 1;
+	private static int playerNumber = 1;
 	
-	public EnvironmentHandler(MainServer callback)
+	public EnvironmentHandler(LaunchServer callback)
 	{
 		playerMap = new ArrayList<Player>();
 		//interactableObjects = new ArrayList<InteractableObject>();
@@ -57,10 +57,8 @@ public class EnvironmentHandler
 		setupPlatform();
 		//setupInteractableObjects(new GameObject("background",0,0,5000,5000,PRIORITYRENDER_BACKGROUND-1));
 		setupUpdateTimer();
-		updateTimer.start();
 		
-		inteligenceBrain.createBot(0, 0);
-		
+		//inteligenceBrain.createBot(0, 0);
 		/*
 		for(int i = 0; i< 12; i++)
 		{
@@ -71,35 +69,40 @@ public class EnvironmentHandler
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
 	public SyncPack getSyncPack() {return syncPack;}
+	public InteligenceBrain getInteligenceBrain() {return inteligenceBrain;}
 	
 	public void connectPlayer(String clientIP)
 	{
-		//TODO: A system that stores the ips already connected, store the position and the caracteristics of the player
+		int xPos = (int)( 700* Math.cos(Math.PI/6 *(playerNumber-1)));
+		int yPos = (int)( 700* Math.sin(Math.PI/6*(playerNumber-1)));
+		
+		
+		if(clientIP.startsWith(".BOT"))
+		{
+			inteligenceBrain.createBot(xPos, yPos);
+			return;
+		}
+		
 		Player currentPlayer = new Player(
 										"devil",
-										(int)( 700* Math.cos(Math.PI/6 *(clientNumber-1))),
-										(int)( 700* Math.sin(Math.PI/6*(clientNumber-1))),
+										xPos,
+										yPos,
 										50,
 										50,
-										clientIP,PRIORITYRENDER_PLAYER
+										clientIP,
+										PRIORITYRENDER_PLAYER
 										);
 		connectPlayer(currentPlayer);
 	}
 	
 	public void connectPlayer(Player currentPlayer)
 	{
-		System.out.println(currentPlayer);
-		callback.getEngineHandler().getScreenRender().addToRender(currentPlayer);
 		playerMap.add(currentPlayer);
 		syncPack.addPersonalPlayer(currentPlayer);
-		
 		syncPack.addPlayerMap(playerMap);
-		
 		callback.getCommsHandler().generateSyncPack();
-		clientNumber++;
+		playerNumber++;
 		increasePlayersRemaining();
-		
-		callback.getEngineHandler().getScreenRender().repaint();
 	}
 	
 	private void increasePlayersRemaining()
@@ -116,8 +119,8 @@ public class EnvironmentHandler
 	
 	private void setupPlatform()
 	{
-		Platform platform = new Platform("platform",0,0,PLATFORM_SIZE,PLATFORM_SIZE,PRIORITYRENDER_BACKGROUND);
-		callback.getEngineHandler().getScreenRender().addToRender(platform);
+		Platform platform = new Platform("platform1",0,0,PLATFORM_SIZE,PLATFORM_SIZE,PRIORITYRENDER_BACKGROUND);
+		//callback.getEngineHandler().getScreenRender().addToRender(platform);
 		this.platform = platform;
 		syncPack.addPlatform(platform);
 	}
@@ -129,7 +132,6 @@ public class EnvironmentHandler
 		interactableObjects.add(object);
 		syncPack.addInteractableObject(interactableObjects);
 	}*/
-	
 	
 	private void setupUpdateTimer()
 	{
@@ -161,7 +163,7 @@ public class EnvironmentHandler
 			}
 		}
 		ActionHandler.doPlayerAction(aPack);
-		callback.getEngineHandler().getScreenRender().repaint();
+		//callback.getEngineHandler().getScreenRender().repaint();
 	}
 	
 	private void colisionHanlder()
@@ -208,10 +210,14 @@ public class EnvironmentHandler
 				{
 					pTemp.setSpeedY(0);
 				}
-				
-				callback.getEngineHandler().getScreenRender().repaint();
+				//callback.getEngineHandler().getScreenRender().repaint();
 			}
 		}
+	}
+	
+	public void startEnvironnment()
+	{
+		updateTimer.start();
 	}
 	
 	private void onPlayerCollided(Player p1,Player p2)

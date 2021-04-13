@@ -5,49 +5,37 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 import client.environment.EnvironmentHandler;
 import common.environment.GameObject;
 
 public class LabelObject extends GameObject
 {
-	private ScreenRender screenRender;
-	private String labelText;
+	protected ScreenRender screenRender;
+	private double ratioCutted = 1;
 	
-	private Font font;
-	private Color fontColor;
-	
-	public LabelObject(int x, int y, int width, int height, int fontSize, String background)
+	public LabelObject(ScreenRender screenRender, String background, int x, int y, int width, int height)
 	{
-		super(background,x,y,width,height,EnvironmentHandler.PRIORITYRENDER_UI);
-		setAbsolute(true);
-		labelText = "";
-		
-		font = new Font("Verdana", Font.BOLD, fontSize);
-		fontColor = new Color(14,44,83);
+		this(screenRender,background,x,y,width,height,0);
 	}
 	
+	public LabelObject(ScreenRender screenRender, String background, int x, int y, int width, int height, int layer)
+	{
+		super(background,x,y,width,height,EnvironmentHandler.PRIORITYRENDER_UI+layer);
+		setAbsolute(true);
+		this.screenRender = screenRender;
+		screenRender.addToRender(this);
+	}
+	
+	public double getRatioCutted() {return ratioCutted;}
+	public void setRatioCutted(double ratioCutted){this.ratioCutted = ratioCutted;}
 	
 	//Method called by the ScreenRender.
 	public void draw(Graphics g)
 	{
 		
-		g.setColor(fontColor);
-		
-		FontMetrics metrics = g.getFontMetrics(font);
-		
-		double newX = x - metrics.stringWidth(labelText)/2;
-		double newY = y + metrics.getHeight()/4;
-		g.setFont(font); 
-		g.drawString(labelText, (int)newX, (int)newY);
-	
 	}
-	
-	public void updateText(String s)
-	{
-		labelText = s;
-	}
-
 
 	public void revalidate(int x, int y, int width, int height) 
 	{
