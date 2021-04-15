@@ -28,7 +28,7 @@ public class CommsHandler {
 	public MainClient getMainClient() {return callback;}
 	
 	public void receiveSyncPack(SyncPack syncPack)
-	{
+	{		
 		EnvironmentHandler evironmentHandler = callback.getEnvironmentHandler();
 		if(evironmentHandler != null)
 		{

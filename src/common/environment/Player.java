@@ -6,22 +6,23 @@ import server.inteligence.PlayerBot;
 
 public class Player extends GameObject implements CircleColider
 {
-	private final int MAX_SPEED = 15;
-	private final int MAX_BOOST = 25;
+	private final int max_speed = 20;
 	
 	private String playerIP;
 	private int radiusColider;
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 1.2;
-	private double accY = 1.2;
+	private double accX = 2.7;
+	private double accY = 2.7;
 	
 	private int stunTime = 500;
 	private boolean flagColision = false;
 	
-	private int boostQuantity = 100;
-	private int boostCost = 1;
+	private int speedBoost = 30;
+	private int boostMax = 100;
+	private int boostQuantity = boostMax;
+	private int boostCost = 3;
 	
 	public Player(String name, double x, double y, int width, int height,String playerIP ,int priorityRender) 
 	{
@@ -30,12 +31,13 @@ public class Player extends GameObject implements CircleColider
 		this.radiusColider = width/2;
 	}
 	
-	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake) 
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
 		this.radiusColider = width/2;
 		this.isAwake = isAwake;
+		this.boostQuantity = boostQuantity;
 	}
 
 	public String getPlayerIP() {return playerIP;}
@@ -158,17 +160,36 @@ public class Player extends GameObject implements CircleColider
 	
 	public void accelerateX(int direction) 
 	{
-		if( ! ((speedY*speedY) + Math.pow((speedX + accX * direction),2) > MAX_SPEED*MAX_SPEED))
+		if( ! (Math.pow(speedY,2) + Math.pow((speedX + accX * direction),2) >  Math.pow(max_speed,2)))
 		{
 			speedX = (speedX + accX* direction);
 		}
+		limitSpeed();
 	}
 	
 	public void accelerateY(int direction) 
 	{		
-		if( ! ((speedX*speedX) + Math.pow(speedY + accY*direction,2) > MAX_SPEED*MAX_SPEED) )
+		if( ! (Math.pow(speedX,2) + Math.pow(speedY + accY*direction,2) > Math.pow(max_speed,2)) )
 		{
 			speedY = (speedY + accY*direction);
+		}
+		limitSpeed();
+	}
+	
+	private void limitSpeed()
+	{
+		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(max_speed,2))
+		{
+			double directionX = 0;
+			
+			if((Math.abs(speedX)>= 0.0001 && Math.abs(speedY) >= 0.0001 ))
+			{
+				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
+				
+				speedX = Math.signum(speedX)*max_speed * directionX;
+				speedY = Math.signum(speedY)*max_speed * (1-directionX);
+				
+			}
 		}
 	}
 	
@@ -180,17 +201,34 @@ public class Player extends GameObject implements CircleColider
 	//TODO: Change how the attackboost works.
 	public void attackBoost() 
 	{
-		if(boostQuantity - boostCost > 0)
+		if(flagColision)
+		{
+			return;
+		}
+		
+		if(boostQuantity - boostCost >= 0)
 		{
 			double directionX = 0;
 			if((Math.abs(speedX)>= 0.0001 && Math.abs(speedY) >= 0.0001 ))
 			{
 				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
-				speedX = (Math.abs(speedX)/speedX) * MAX_BOOST * directionX;
-				speedY = (Math.abs(speedY)/speedY) * MAX_BOOST * (1-directionX);
+				speedX = (Math.abs(speedX)/speedX) * speedBoost * directionX;
+				speedY = (Math.abs(speedY)/speedY) * speedBoost * (1-directionX);
 				
 				boostQuantity-=boostCost;
 			}
+		}
+	}
+
+	public void addBoost(int boostGain) 
+	{
+		if(boostQuantity + boostGain > boostMax)
+		{
+			boostQuantity = boostMax;
+		}
+		else
+		{
+			boostQuantity += boostGain;
 		}
 	}
 }

@@ -137,14 +137,14 @@ public class CommsHandler extends Thread
 		if(sPack.getPlayer() instanceof PlayerBot)
 		{
 			Player p = sPack.getPlayer();
-			newSPack.addPersonalPlayer(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake()));
+			newSPack.addPersonalPlayer(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake(),p.getBoostQuantity()));
 		}
 		
 		for(Player p : playerMap)
 		{
 			if(p instanceof PlayerBot)
 			{
-				onlyPlayerInstance.add(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake()));
+				onlyPlayerInstance.add(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake(),p.getBoostQuantity()));
 				continue;
 			}
 			onlyPlayerInstance.add(p);

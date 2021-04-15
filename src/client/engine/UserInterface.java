@@ -77,9 +77,10 @@ public class UserInterface
 		updatePlayerBoost();
 	}
 	
+	
 	private void updatePlayerBoost()
 	{
-		if(callback.getMainClient().getEnvironmentHandler().getPlayerClient()!= null)
+		if(callback.getMainClient().getEnvironmentHandler().getPlayerClient() != null)
 		{
 			boostLabel.setSliderRatio(callback.getMainClient().getEnvironmentHandler().getPlayerClient().getBoostQuantity()/100.0);
 		}

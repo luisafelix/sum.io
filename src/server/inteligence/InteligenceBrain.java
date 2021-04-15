@@ -37,7 +37,7 @@ public class InteligenceBrain
 	
 	public void createBot(int botX,int botY)
 	{
-		PlayerBot pb = new PlayerBot(this,"ball11",botX,botY,50,50,botCount);
+		PlayerBot pb = new PlayerBot(this,"bot",botX,botY,50,50,botCount);
 		bots.add(pb);
 		callback.connectPlayer(pb);
 		botCount++;

@@ -4,23 +4,27 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Hashtable;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+
 public class PlayerPanel extends LobbyPanel
 {
-	
-	private BufferedImage image;
 	
 	private JPanel informations;
 	private JPanel imageContainer;
 	private JPanel buttons;
 	
-	private AddButton addButton;
+	private JButton addButton;
 	private JLabel name;
+	private JLabel image;
 	
 	public PlayerPanel(LobbyHandler callback) {
 		super(callback);
@@ -31,13 +35,12 @@ public class PlayerPanel extends LobbyPanel
 		super.add(imageContainer);
 		super.add(informations);
 		super.add(buttons);
-		
 	}
 	
 	private void setupButtons()
 	{	
 		buttons = new JPanel(new BorderLayout());
-		addButton = new AddButton(this);
+		addButton = new JButton();
 		
 		addButton.setContentAreaFilled(false);
 		addButton.addActionListener(new ActionListener() 
@@ -51,9 +54,14 @@ public class PlayerPanel extends LobbyPanel
 								   );
 		buttons.setOpaque(false);
 		buttons.setBorder(new EmptyBorder(BORDER_SIZE,BORDER_SIZE,BORDER_SIZE,BORDER_SIZE));
+		addButton.setBorderPainted(false);
+		addButton.setIcon(new ImageIcon( callback.getImageMap().get("add").getScaledInstance(50, 50, 1)));
+		addButton.setRolloverIcon(new ImageIcon( callback.getImageMap().get("add2").getScaledInstance(50, 50, 1)));
+		addButton.setDisabledIcon(new ImageIcon( callback.getImageMap().get("add1").getScaledInstance(50, 50, 1)));
+		
 		buttons.add(addButton);
 		
-		//addBot.setBorderPainted(false);
+		
 	}
 	
 	public void addBot()
@@ -64,7 +72,12 @@ public class PlayerPanel extends LobbyPanel
 	private void setupImages()
 	{
 		imageContainer = new JPanel();
+		
+		image = new JLabel();
+		imageContainer.setBorder(new EmptyBorder(BORDER_SIZE-15,BORDER_SIZE-15,BORDER_SIZE+15,BORDER_SIZE+15));
+		
 		imageContainer.setOpaque(false);
+		imageContainer.add(image);
 	}
 	
 	private void setupInformations()
@@ -81,6 +94,24 @@ public class PlayerPanel extends LobbyPanel
 	public void setName(String value)
 	{
 		name.setText(value);
+	}
+	
+	public void disableButton()
+	{
+		addButton.setEnabled(false);
+	}
+	
+	public void setImage(BufferedImage bi)
+	{
+		if(bi != null)
+		{
+			image.setIcon(new ImageIcon(bi.getScaledInstance(100, 100, 1)));
+		}
+	}
+
+	public void enableButton() 
+	{
+		addButton.setEnabled(true);
 	}
 
 }

@@ -26,4 +26,5 @@ public interface CircleColider
 		
 		return haveColision;
 	}
+	
 }

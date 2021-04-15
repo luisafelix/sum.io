@@ -12,13 +12,13 @@ public class FollowState extends AbstractFSMState
 	
 	private Player target;
 	
-	public FollowState(PlayerBot player)
+	public FollowState(PlayerBot player,Player target)
 	{
 		super(player);
-		target = null;
+		this.target = target;
 	}
 	
-	public void setTarget(Player target){this.target = target;}
+	public void setTarget(Player target){}
 	
 	@Override
 	public boolean enterState()
@@ -29,7 +29,6 @@ public class FollowState extends AbstractFSMState
 		{
 			return false;
 		}
-		System.out.println("Entered FollowState!");
 		return base;
 	}
 	
@@ -38,6 +37,7 @@ public class FollowState extends AbstractFSMState
 	{
 		boolean base = super.exitState();
 		target = null;
+		player.getFiniteStateMachine().enterState(new IdleState(player));
 		return base;
 	}
 	
@@ -52,24 +52,26 @@ public class FollowState extends AbstractFSMState
 		double directionY = wishPosY - player.getY();
 		
 		player.moveTo(directionX,directionY);
+		
+		int attackRange = 100;
+		
+		if(player.squareDistanceTo(target) < Math.pow(attackRange, 2))
+		{
+			player.attackBoost();
+		}
 		//Lose the target when mission accomplished
 		if(!target.isAwake())
 		{
-			target = null;
-			this.exitState();
-			player.getFiniteStateMachine().enterState(new IdleState(player.getInteligenceBrain(),player));
+			this.exitState();	
 			return;
 		}
 		
 		//Lose the player when the bot is following him
 		if(player.squareDistanceTo(target)>Math.pow(player.getBotViewRange(),2))
 		{
-			target = null;
 			this.exitState();
-			player.getFiniteStateMachine().enterState(new IdleState(player.getInteligenceBrain(),player));
 			return;
 		}
-		
 	}
 
 }

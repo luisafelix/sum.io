@@ -34,9 +34,9 @@ public class LobbyPanel extends JPanel
 	public static final Color LIGHT_BLUE = new Color(45,136,252);
 	public static final Color BLUE = new Color(38,116,216);
 	public static final Color DARK_BLUE = new Color(14,44,83);
-	public static final Color GREEN = new Color(38,216,148);
-	public static final Color LIGHT_GREEN = new Color(43,249,170);
-	public static final Color DARK_GREEN = new Color(38,173,148);
+	public static final Color LIGHT_GREEN = new Color(22,247,90);
+	public static final Color GREEN = new Color(22,247,90);
+	public static final Color DARK_GREEN = new Color(9,224,135);
 	
 	private Color currentLightColor;
 	private Color currentDarkColor;
@@ -95,5 +95,4 @@ public class LobbyPanel extends JPanel
 		g.fillRect(BORDER_SIZE,4*getHeight()/5-BORDER_SIZE,getWidth()-2*BORDER_SIZE,getHeight()-4*getHeight()/5);
 		g.fillRect(25*getWidth()/26-BORDER_SIZE,BORDER_SIZE,getWidth()-25*getWidth()/26,getHeight()-2*BORDER_SIZE);
 	}
-	
 }

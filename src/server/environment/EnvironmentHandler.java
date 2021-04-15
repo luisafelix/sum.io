@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.Timer;
@@ -12,6 +13,7 @@ import common.communication.ActionPack;
 import common.communication.SyncPack;
 import common.environment.ActionHandler;
 import common.environment.CircleColider;
+import common.environment.CollectableBoost;
 import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
@@ -28,7 +30,8 @@ public class EnvironmentHandler
 	private final int PLATFORM_SIZE = 1600;
 	
 	private ArrayList<Player> playerMap;
-	//private ArrayList<InteractableObject> interactableObjects;
+	private ArrayList<GameObject> interactableObjects;
+	
 	private Platform platform;
 	private LaunchServer callback;
 	private InteligenceBrain inteligenceBrain;
@@ -41,13 +44,17 @@ public class EnvironmentHandler
 	private int playersRemainingCount = 0;
 	private double friction = 0.02;
 	
+	private int aparitionBoostTime = 2000; //
+	
+	private int boostTime = 0;
+	
 	//FIXME: temp
 	private static int playerNumber = 1;
 	
 	public EnvironmentHandler(LaunchServer callback)
 	{
 		playerMap = new ArrayList<Player>();
-		//interactableObjects = new ArrayList<InteractableObject>();
+		interactableObjects = new ArrayList<GameObject>();
 		
 		this.callback = callback;
 		syncPack = new SyncPack();
@@ -55,21 +62,15 @@ public class EnvironmentHandler
 		inteligenceBrain = new InteligenceBrain(this);
 		
 		setupPlatform();
-		//setupInteractableObjects(new GameObject("background",0,0,5000,5000,PRIORITYRENDER_BACKGROUND-1));
 		setupUpdateTimer();
 		
-		//inteligenceBrain.createBot(0, 0);
-		/*
-		for(int i = 0; i< 12; i++)
-		{
-			inteligenceBrain.createBot((int)(700*Math.cos(i*Math.PI/6)),(int)( 700*Math.sin(i*Math.PI/6)));
-		}
-		*/
+		
 	}
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
 	public SyncPack getSyncPack() {return syncPack;}
 	public InteligenceBrain getInteligenceBrain() {return inteligenceBrain;}
+	public ArrayList<GameObject> getInteractableObjects(){return interactableObjects;}
 	
 	public void connectPlayer(String clientIP)
 	{
@@ -125,14 +126,6 @@ public class EnvironmentHandler
 		syncPack.addPlatform(platform);
 	}
 	
-	/*
-	private void setupinteractableObjects(GameObject object)
-	{
-		callback.getEngineHandler().getScreenRender().addToRender(object);
-		interactableObjects.add(object);
-		syncPack.addInteractableObject(interactableObjects);
-	}*/
-	
 	private void setupUpdateTimer()
 	{
 		updateTimer = new Timer(updateRate,
@@ -144,11 +137,54 @@ public class EnvironmentHandler
 							});
 	}
 	
-	//Take care to insert codes here, because this methode is called really fast
-	public void updateEnvironment()
-	{
-		colisionHanlder();
-		movementHandler();
+	private void addBoostHandler()
+	{	
+		if(boostTime*updateRate >= aparitionBoostTime)
+		{
+			int spawnRangeX = 700;
+			int spawnRangeY = 700;
+			
+			int randonX = (int) (Math.random()*spawnRangeX)-spawnRangeX/2;
+			int randonY = (int) (Math.random()*spawnRangeY)-spawnRangeY/2;
+			
+			int maxTry = 30;
+			CollectableBoost cb = null;
+			
+			int count = 0;
+			boolean isUnique = false;
+			while(count<maxTry && !isUnique)
+			{
+				isUnique = true;
+				
+				Iterator<GameObject> itr = interactableObjects.iterator();
+				do
+				{
+					
+					if(interactableObjects.isEmpty())
+					{
+						cb = new CollectableBoost("boost", randonX, randonY, 50, 50);
+						break;
+					}
+					GameObject go = itr.next();
+					cb = new CollectableBoost("boost", randonX, randonY, 50, 50);
+					if(((CircleColider)go).hasCollidedTo(cb) && go.isAwake())
+					{
+						isUnique = false;
+						break;
+					}
+				}
+				while(itr.hasNext());
+				
+				count ++;
+			}
+			boostTime = 0;
+			
+			if(cb != null && isUnique)
+			{
+				interactableObjects.add(cb);
+				syncPack.addInteractableObject(cb);
+			}
+		}
 	}
 	
 	public void doPlayerAction(ActionPack aPack)
@@ -163,7 +199,6 @@ public class EnvironmentHandler
 			}
 		}
 		ActionHandler.doPlayerAction(aPack);
-		//callback.getEngineHandler().getScreenRender().repaint();
 	}
 	
 	private void colisionHanlder()
@@ -187,6 +222,15 @@ public class EnvironmentHandler
 				{
 					onPlayerOut(p1);
 				}
+				
+				for(GameObject go: interactableObjects)
+				{
+					if(go.isAwake() && ((CircleColider)go).hasCollidedTo(p1))
+					{
+						
+					}
+				}
+				
 			}
 		}
 	}
@@ -210,7 +254,6 @@ public class EnvironmentHandler
 				{
 					pTemp.setSpeedY(0);
 				}
-				//callback.getEngineHandler().getScreenRender().repaint();
 			}
 		}
 	}
@@ -233,5 +276,20 @@ public class EnvironmentHandler
 		}
 		p.sleepObject();
 		decreasePlayersRemaining();
+	}
+	
+	private void updateTime()
+	{
+		boostTime++;
+	}
+	
+	//Take care to insert codes here, because this methode is called really fast
+	public void updateEnvironment()
+	{
+		colisionHanlder();
+		movementHandler();
+		addBoostHandler();
+		
+		updateTime();
 	}
 }

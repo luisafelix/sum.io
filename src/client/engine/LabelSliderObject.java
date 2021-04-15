@@ -6,6 +6,7 @@ public class LabelSliderObject extends LabelObject
 {
 
 	private LabelObject slider;
+	private double imgCorrection = 12.5/100;
 	
 	public LabelSliderObject(ScreenRender screenRender, String background,String sliderRef, int x, int y, int width, int height) 
 	{
@@ -19,8 +20,12 @@ public class LabelSliderObject extends LabelObject
 		
 	}
 	
+	public void setImageCorrection(double value){this.imgCorrection = value;}
+	
 	public void setSliderRatio(double ratio)
 	{
+		ratio = (1 - imgCorrection)*ratio;
+		
 		slider.setRatioCutted(ratio);
 	}
 	

@@ -14,12 +14,12 @@ public class EngineHandler {
 	private MainClient callback;
 	private UserInterface userInterface;
 	
-	public EngineHandler(MainClient callback, JFrame jframe)
+	public EngineHandler(MainClient callback, JFrame jframe, ImageCache imageCache)
 	{
 		this.callback = callback;
 		this.window = new Window(this,jframe);
 		
-		screenRender = new ScreenRender(this,window.getJFrame().getBufferStrategy());
+		screenRender = new ScreenRender(this,window.getJFrame().getBufferStrategy(),imageCache);
 		inputHandler = new InputHandler(this);
 		
 		//Why i need this to work properly ?

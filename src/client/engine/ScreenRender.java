@@ -30,26 +30,27 @@ public class ScreenRender{
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private EngineHandler callback;
-	
 	private final int TEORICAL_FPS = 60;
 	private int realFps = TEORICAL_FPS;
 	private double oldT = 0;
 	
 	private RenderThread renderThread;
+	private ImageCache imageCache;
+	private EngineHandler callback;
 	
-	
-	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy)
+	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy, ImageCache imageCache)
 	{
 		this.bufferStrategy = bufferStrategy;
 		
 		originX = 0;
 		originY = 0;
 		this.callback = callback;
-		renderingQueue = new PriorityBlockingQueue<GameObject>();
-		imageMap = new Hashtable<String,BufferedImage>();
+		this.imageCache = imageCache;
 		
-		loadImages();
+		renderingQueue = new PriorityBlockingQueue<GameObject>();
+		imageMap = imageCache.getImageMap();
+		
+		//loadImages();
 		
 		renderThread = new RenderThread(this, TEORICAL_FPS);
 		renderThread.start();
@@ -63,29 +64,10 @@ public class ScreenRender{
 		this.originY = y;
 	}
 	
-	private void loadImages()
-	{
-		//Find all the images names in the res folder
-		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res"+ System.getProperty("file.separator")+"images");
-		String[] imageNames = res.list();
-		try{
-			for(int i = 0;i < imageNames.length;i++)
-			{
-				//just loads image that are in png format.
-				if(imageNames[i].endsWith(".png"))
-				{
-					BufferedImage image = ImageIO.read(new File(res + System.getProperty("file.separator") + imageNames[i]));
-					imageMap.put(imageNames[i].substring(0,imageNames[i].length()-4),image);
-				}
-			}
-		} catch(Exception e) {
-			System.out.println("Error: Image did not load");
-		}	
-	}
 	
 	public void addToRender(GameObject go)
 	{
-		//Replace contains method by this explicit loop to take advantage of it and update X and Y position.
+		//Replace contains method by this explicit loop to take advantage of it and update X and Y position.		
 		for(GameObject g : renderingQueue) 
 		{	
 		if(g.equals(go)) 
@@ -101,6 +83,11 @@ public class ScreenRender{
 	
 	public void addToRender(ArrayList<GameObject> goList)
 	{
+		if(goList == null)
+		{
+			return;
+		}
+		
 		for(GameObject go : goList )
 		{
 			addToRender(go);
@@ -199,7 +186,7 @@ public class ScreenRender{
 		drawGameObject(g,go,ratioCutted);
 	}
 	
-	private BufferedImage getImage(GameObject go, double ratioCutted)
+	private BufferedImage getImageCutted(GameObject go, double ratioCutted)
 	{
 		BufferedImage currentImage = imageMap.get(go.getName());
 		if(ratioCutted == 0)
@@ -223,7 +210,7 @@ public class ScreenRender{
 	
 	private void drawGameObject(Graphics g, GameObject go, double ratioCutted)
 	{
-		BufferedImage currentImage = getImage(go,ratioCutted);
+		BufferedImage currentImage = getImageCutted(go,ratioCutted);
 		
 		if(currentImage == null && !go.getName().equals("null"))
 		{

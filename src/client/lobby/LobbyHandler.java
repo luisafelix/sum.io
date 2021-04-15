@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -12,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import client.MainClient;
+import client.engine.ImageCache;
 import common.communication.LobbyPack;
 
 /*
@@ -32,12 +35,15 @@ public class LobbyHandler{
 	private LobbyPack lobbyPack;
 	
 	private JFrame window;
+	private Hashtable<String,BufferedImage> imageMap = null;
+	
 	
 	private static int botCount = 0;
 	
-	public LobbyHandler(MainClient callback, String title, int w, int h)
+	public LobbyHandler(MainClient callback, String title, int w, int h, ImageCache imageCache)
 	{
 		this.callback = callback;
+		imageMap = imageCache.getImageMap();
 		
 		window = new JFrame(title);
 		lobbyPack = new LobbyPack();
@@ -54,6 +60,7 @@ public class LobbyHandler{
 	public LobbyPack getLobbyPack() {return lobbyPack;}
 	public JFrame getJFrame(){return window;}
 	public String getPlayer() {return player;}
+	public Hashtable<String,BufferedImage> getImageMap(){return imageMap;}
 	
 	private void setupMainPanel()
 	{
@@ -129,7 +136,6 @@ public class LobbyHandler{
 	public void onPlayerConnectServer(String name)
 	{
 		this.player = name;
-		System.out.println(this.player);
 		lobbyPack.addPlayer(name);
 		callback.getCommsHandler().connectNetwork();
 		callback.getCommsHandler().sendLobbyPack(lobbyPack);
@@ -137,17 +143,29 @@ public class LobbyHandler{
 	
 	public void syncLobby(LobbyPack lPack) 
 	{
+		String playerSkin = "devil";
 		lobbyPack = lPack;
 		LinkedList<String> playerList = lobbyPack.getPlayerList();
 		int index = 2;
 		for(String s:playerList)
 		{
-			panelsList.get(index).setName(s);
+			((PlayerPanel)panelsList.get(index)).setName(s);
+			((PlayerPanel)panelsList.get(index)).disableButton();
+			if(s.startsWith(".BOT"))
+			{
+				((PlayerPanel)panelsList.get(index)).setImage(imageMap.get("bot"));
+			}
+			else
+			{
+				((PlayerPanel)panelsList.get(index)).setImage(imageMap.get(playerSkin));
+			}
 			index++;
 		}
 		for(int i = index; i < NUMBERMAX_PLAYERS+4-index; i++ )
 		{
 			panelsList.get(i).setName("< EMPTY >");
+			((PlayerPanel)panelsList.get(index)).enableButton();
+			((PlayerPanel)panelsList.get(index)).setImage(null);
 		}
 		
 		if(lobbyPack.getStartFlag())

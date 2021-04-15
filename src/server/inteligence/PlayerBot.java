@@ -24,7 +24,7 @@ public class PlayerBot extends Player
 		super(name,x,y,width,height,botID+botCount,EnvironmentHandler.PRIORITYRENDER_PLAYER);
 		aPack = new ActionPack(this);
 		this.inteligenceBrain = inteligenceBrain;
-		finiteStateMachine = new FiniteStateMachine(new IdleState(inteligenceBrain,this));
+		finiteStateMachine = new FiniteStateMachine(new IdleState(this));
 		
 		botViewRange = (int) (Math.random()*200 + 400); // min 400 max 600
 	}

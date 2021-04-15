@@ -2,6 +2,7 @@ package client;
 
 import client.communication.CommsHandler;
 import client.engine.EngineHandler;
+import client.engine.ImageCache;
 import client.environment.EnvironmentHandler;
 import client.lobby.LobbyHandler;
 import common.communication.ActionPack;
@@ -29,9 +30,11 @@ public class MainClient
 	private EnvironmentHandler environmentHandler;
 	private LobbyHandler lobbyHandler;
 	private LaunchServer launchServer;
+	private ImageCache imageCache;
 	
 	public MainClient(String[] args)
 	{
+		imageCache = new ImageCache();
 		String ip = args[0];
 		int port = Integer.parseInt(args[1]);
 		
@@ -75,7 +78,7 @@ public class MainClient
 	public void connectPlayer(String playerName, String ip,int port)
 	{
 		commsHandler = new CommsHandler(ip,port,this);
-		lobbyHandler = new LobbyHandler(this,"sum.io",800,600);
+		lobbyHandler = new LobbyHandler(this,"sum.io",800,600,imageCache);
 		lobbyHandler.onPlayerConnectServer(playerName);
 	}
 	
@@ -86,7 +89,7 @@ public class MainClient
 		{
 			launchServer.launchGame(lobbyHandler.getLobbyPack().getPlayerList());
 		}
-		engineHandler = new EngineHandler(this,lobbyHandler.getJFrame());
+		engineHandler = new EngineHandler(this,lobbyHandler.getJFrame(),imageCache);
 		environmentHandler = new EnvironmentHandler(this);
 	}
 	

@@ -3,6 +3,7 @@ package client.environment;
 import java.util.ArrayList;
 import client.MainClient;
 import common.communication.SyncPack;
+import common.environment.CollectableBoost;
 import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
@@ -17,7 +18,7 @@ public class EnvironmentHandler
 	public static final int PRIORITYRENDER_UI = 1000;
 	
 	private ArrayList<Player> playerMap;
-	//private ArrayList<InteractableObjects> interactableObjects;
+	private ArrayList<GameObject> interactableObjects;
 	private Platform platform;
 	private Player player;
 	private MainClient callback;
@@ -28,7 +29,7 @@ public class EnvironmentHandler
 	public EnvironmentHandler(MainClient callback)
 	{
 		playerMap = new ArrayList<Player>();
-		//interactableObjects = new ArrayList<InteractableObjects>();
+		interactableObjects = new ArrayList<GameObject>();
 		this.callback = callback;
 	}
 
@@ -59,10 +60,15 @@ public class EnvironmentHandler
 			}
 		}
 		
+		//Update playerState.
 		if(engineHandler != null)
 		{
 			for(Player p : playerMap)
 			{
+				if(p.equals(player))
+				{
+					player = p;
+				}
 				engineHandler.getScreenRender().addToRender((GameObject)p);
 			}
 		}
@@ -80,13 +86,12 @@ public class EnvironmentHandler
 			callback.getEngineHandler().getScreenRender().setOrigin((int)player.getX(),(int)player.getY());
 		}
 		
-		/*
-		if(engineHandler != null && nonInteractableObjects.size() != sPack.getNonInteractableObjects().size())
+		if(engineHandler != null)
 		{
-			interactableObjects = sPack.getinteractableObjects();
+			interactableObjects = sPack.getInteractableObjects();
 			engineHandler.getScreenRender().addToRender(interactableObjects);
 		}
-		*/
+		
 		callback.getEngineHandler().getUserInterface().update();
 	}
 }

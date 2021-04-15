@@ -3,52 +3,39 @@ package server.inteligence;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import common.environment.GameObject;
 import common.environment.Player;
 
 public class IdleState extends AbstractFSMState
 {
 	
-	private InteligenceBrain inteligenceBrain;
-	private int botViewRange = 10;
-	
-	public IdleState(InteligenceBrain inteligenceBrain,PlayerBot player)
+	public IdleState(PlayerBot player)
 	{
 		super(player);
-		this.inteligenceBrain = inteligenceBrain;
-		
-	}
-	@Override
-	public boolean enterState()
-	{
-		boolean base = super.enterState();
-		System.out.println("Entered Idle State");
-		return base;
-	}
-	
-	@Override
-	public boolean exitState()
-	{
-		boolean base = super.exitState();
-		System.out.println("Exited IdleState");
-		return base;
 	}
 	
 	@Override
 	public void updateState() 
 	{
 		//Change the state of the ui
+		ArrayList<Player> playerMap = player.getInteligenceBrain().getEnvironmentHandler().getPlayerMap();
+		ArrayList<GameObject> interactableObjects = player.getInteligenceBrain().getEnvironmentHandler().getInteractableObjects();
 		
-		ArrayList<Player> playerMap = inteligenceBrain.getEnvironmentHandler().getPlayerMap();
-		Player target= null;
+
+		double squareMaxDist = Math.pow(player.getBotViewRange(), 2);
+		
 		
 		//FIXME: HardCoded
+		Player target= null;
 		double min = 5000000;
+		
 		for(Player p : playerMap)
 		{
+			min = 5000000;
 			//Test to search for a player that is not himself.
 			if(!player.equals(p) && p.isAwake())
 			{
-				double squareMaxDist = Math.pow(player.getBotViewRange(), 2);
+				
 				double squareDist = player.squareDistanceTo(p);
 				if(squareDist < squareMaxDist && min > squareDist)
 				{
@@ -59,15 +46,39 @@ public class IdleState extends AbstractFSMState
 		}
 		if(target!=null)
 		{
-			FollowState fState = new FollowState(player);
-			fState.setTarget(target);
+			FollowState fState = new FollowState(player,target);
 			this.exitState();
 			player.getFiniteStateMachine().enterState(fState);
 			return;
 		}
 		
+		//Serching for boost if it is necessary
+		GameObject boost = null;
+		min = 5000000;
+			
+		for(GameObject g : interactableObjects)
+			{
+				//Test to search for a player that is not himself.
+				if(!player.equals(g) && g.isAwake())
+				{
+					double squareDist = player.squareDistanceTo(g);
+					if(squareDist < squareMaxDist && min > squareDist)
+					{
+						boost = g;
+						min = squareDist;
+					}
+				}
+		}
+		
+		if(boost!=null)
+		{
+			SearchBoostState sState = new SearchBoostState(player,boost);
+			this.exitState();
+			player.getFiniteStateMachine().enterState(sState);
+			return;
+		}
+		
+		player.getFiniteStateMachine().enterState(new CentralizeState(player));
 		//TODO: Create a random and smartMovement to the bot.
-
 	}
-
 }
